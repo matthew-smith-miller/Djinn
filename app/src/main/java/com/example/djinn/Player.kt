@@ -17,17 +17,20 @@ data class Player(val id: Int, var name: String, var initials: String) {
                 playerCount,
                 name,
                 when (names.size) {
-                    3 -> names[0].substring(0,1).plus(names[2].substring(0,1))
-                    2 -> names[0].substring(0,1).plus(names[1].substring(0,1))
-                    1 -> names[0].substring(0,1)
+                    3 -> names[0].substring(0, 1).plus(names[2].substring(0, 1))
+                    2 -> names[0].substring(0, 1).plus(names[1].substring(0, 1))
+                    1 -> names[0].substring(0, 1)
                     0 -> "N/A"
-                    else -> names[0].substring(0,1).plus(names.last().substring(0,1))
+                    else -> names[0].substring(0, 1).plus(names.last().substring(0, 1))
                 }
             )
         }
 
-        fun getPlayer(id: Int): Player? {
-             return playerMap[id]
+        fun getPlayer(id: Int?): Player? {
+            return when (id) {
+                null -> null
+                else -> playerMap[id]
+            }
         }
     }
 

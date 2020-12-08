@@ -3,48 +3,38 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:gravity="center"
     android:id="@+id/album_item"
     android:background="?android:attr/selectableItemBackground"
-    android:padding="12dp">
+    android:padding="@dimen/list_item_root_padding">
 
     <View
-        android:id="@+id/score_badge_visitor"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
-        android:background="@color/colorPrimary"
+        android:id="@+id/score_badge"
+        android:layout_width="@dimen/square_badge_height_width"
+        android:layout_height="@dimen/square_badge_height_width"
+        android:layout_marginStart="@dimen/side_margin"
         android:layout_alignParentStart="true"
-        android:layout_marginStart="60dp"/>
+        android:background="@drawable/round_view_knock" />
 
     <TextView
-        android:id="@+id/score_visitor"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
+        android:id="@+id/score"
+        style="@style/HeaderTextSecondary"
+        android:layout_width="@dimen/square_badge_height_width"
         tools:text="8"
-        style="@style/HeaderText"
-        android:layout_alignStart="@id/score_badge_visitor"
-        android:layout_alignTop="@id/score_badge_visitor"
+        android:layout_height="@dimen/square_badge_height_width"
+        android:layout_alignStart="@id/score_badge"
+        android:layout_alignTop="@id/score_badge"
         android:textAlignment="center"
-        android:gravity="center"/>
-
-    <View
-        android:id="@+id/score_badge_home"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
-        android:background="@color/colorPrimaryDark"
-        android:layout_marginStart="160dp"
-        android:layout_marginEnd="60dp"
-        android:layout_alignParentEnd="true"/>
+        android:gravity="center" />
 
     <TextView
-        android:id="@+id/score_home"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
-        tools:text="22"
-        style="@style/HeaderText"
-        android:layout_alignStart="@id/score_badge_home"
-        android:layout_alignTop="@id/score_badge_home"
-        android:textAlignment="center"
-        android:gravity="center"/>
+        android:id="@+id/bonus_note"
+        style="@style/HeaderTextTertiary"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/square_badge_height_width"
+        android:layout_marginStart="@dimen/small_gap"
+        android:layout_marginEnd="@dimen/small_gap"
+        android:layout_toEndOf="@id/score_badge"
+        tools:text="Partial game bonus"
+        android:gravity="center" />
 
 </RelativeLayout>

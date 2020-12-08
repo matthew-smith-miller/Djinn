@@ -30,15 +30,16 @@ class GameAdapter(context: Context, games: ArrayList<Game>) :
             (listItemView?.findViewById<View>(R.id.score_home) as TextView).text = it.toString()
         }
         if (currentGame?.endDate != null) {
-            (listItemView?.findViewById<View>(R.id.game_date) as TextView).text =
-                currentGame.endDate!!.format(DateTimeFormatter.ofPattern("MM/dd"))
+            currentGame.endDate!!.format(DateTimeFormatter.ofPattern("MM/dd")).let {
+                (listItemView?.findViewById<View>(R.id.game_date) as TextView).text = it
+            }
         } else {
             (listItemView?.findViewById<View>(R.id.game_date) as TextView).text =
                 currentGame?.status
         }
-        listItemView.tag = currentGame?.id
+        listItemView?.tag = currentGame?.id
 
         //Return statement
-        return listItemView
+        return listItemView!!
     }
 }

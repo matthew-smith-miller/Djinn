@@ -35,7 +35,7 @@ class GameActivity : AppCompatActivity() {
             }
 
             currentGame.number.let {
-                (findViewById<View>(R.id.game_title) as TextView).text = "Game" + it.toString()
+                (findViewById<View>(R.id.game_title) as TextView).text = "Game " + it.toString()
             }
 
             //Set up partial games listview
@@ -44,5 +44,4 @@ class GameActivity : AppCompatActivity() {
             listView.adapter = adapter
         }
     }
-
 }

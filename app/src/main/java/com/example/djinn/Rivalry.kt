@@ -14,8 +14,11 @@ data class Rivalry(val id: Int, val homePlayer: Int, val visitorPlayer: Int) {
             return Rivalry(rivalryCount, HOME_PLAYER, opponent)
         }
 
-        fun getRivalry(id: Int): Rivalry? {
-            return rivalryMap[id]
+        fun getRivalry(id: Int?): Rivalry? {
+            return when (id) {
+                null -> null
+                else -> rivalryMap[id]
+            }
         }
     }
 

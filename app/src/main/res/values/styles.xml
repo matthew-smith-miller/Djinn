@@ -20,9 +20,23 @@
     </style>
 
     <style name="HeaderTextTertiary" parent="AppTheme">
+        <item name="android:textColor">@color/colorMediumGray</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:gravity">center</item>
+        <item name="fontStyle">italic</item>
+    </style>
+
+    <style name="HeaderTextQuaternary" parent="AppTheme">
         <item name="android:textColor">@color/colorDarkGray</item>
         <item name="android:textSize">10sp</item>
         <item name="android:gravity">center</item>
     </style>
+
+    <style name="ListItemText" parent="AppTheme">
+        <item name="android:textColor">@color/colorAccentDark</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:gravity">center</item>
+    </style>
+
 
 </resources>
