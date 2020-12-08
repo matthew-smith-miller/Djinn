@@ -1,0 +1,111 @@
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal"
+        android:id="@+id/album_item"
+        android:background="?android:attr/selectableItemBackground"
+        android:padding="12dp">
+
+        <TextView
+            android:id="@+id/name_visitor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="Neil Katuna"
+            style="@style/HeaderTextTertiary"
+            android:layout_below="@id/image_visitor"
+            android:layout_alignStart="@id/image_visitor"
+            android:layout_marginTop="6dp"
+            android:maxLines="1"/>
+
+        <TextView
+            android:id="@+id/score_visitor"
+            android:layout_width="56dp"
+            android:layout_height="wrap_content"
+            tools:text="162"
+            style="@style/HeaderText"
+            android:layout_below="@id/name_visitor"
+            android:layout_alignEnd="@id/image_visitor"
+            android:layout_marginTop="12dp"/>
+
+        <View
+            android:id="@+id/image_visitor"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:background="@color/colorPrimary"
+            android:layout_marginStart="6dp"/>
+
+        <TextView
+            android:id="@+id/initials_visitor"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            tools:text="NK"
+            style="@style/HeaderText"
+            android:layout_alignStart="@id/image_visitor"
+            android:layout_alignTop="@id/image_visitor"
+            android:textAlignment="center"/>
+
+        <TextView
+            android:id="@+id/versus_text"
+            android:layout_width="40dp"
+            android:layout_height="56dp"
+            tools:text="vs."
+            style="@style/HeaderTextSecondary"
+            android:layout_toEndOf="@id/image_visitor"
+            android:layout_marginStart="60dp"
+            android:textAlignment="center"/>
+
+        <View
+            android:id="@+id/image_home"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:background="@color/colorPrimaryDark"
+            android:layout_marginStart="60dp"
+            android:layout_marginEnd="6dp"
+            android:layout_toEndOf="@id/versus_text"/>
+
+        <TextView
+            android:id="@+id/initials_home"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            tools:text="MM"
+            style="@style/HeaderText"
+            android:layout_alignStart="@id/image_home"
+            android:layout_alignTop="@id/image_home"
+            android:textAlignment="center"/>
+
+        <TextView
+            android:id="@+id/name_home"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="Matt Miller"
+            style="@style/HeaderTextTertiary"
+            android:layout_below="@id/image_home"
+            android:layout_alignEnd="@id/image_home"
+            android:layout_marginTop="6dp"/>
+
+        <TextView
+            android:id="@+id/score_home"
+            android:layout_width="56dp"
+            android:layout_height="wrap_content"
+            tools:text="335"
+            style="@style/HeaderText"
+            android:layout_alignTop="@id/score_visitor"
+            android:layout_alignStart="@id/image_home"/>
+    </RelativeLayout>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="New"/>
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/listview_games"/>
+</LinearLayout>
