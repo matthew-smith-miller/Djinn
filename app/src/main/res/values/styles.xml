@@ -8,7 +8,7 @@
     </style>
 
     <style name="HeaderText" parent="AppTheme">
-        <item name="android:textColor">@color/colorAccentDark</item>
+        <item name="android:textColor">@color/colorDarkGray</item>
         <item name="android:textSize">24sp</item>
         <item name="android:gravity">center</item>
     </style>
@@ -20,10 +20,10 @@
     </style>
 
     <style name="HeaderTextTertiary" parent="AppTheme">
-        <item name="android:textColor">@color/colorMediumGray</item>
+        <item name="android:textColor">@color/colorLightGray</item>
         <item name="android:textSize">14sp</item>
         <item name="android:gravity">center</item>
-        <item name="fontStyle">italic</item>
+        <item name="android:textStyle">italic</item>
     </style>
 
     <style name="HeaderTextQuaternary" parent="AppTheme">

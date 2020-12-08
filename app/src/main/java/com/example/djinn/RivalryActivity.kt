@@ -7,6 +7,7 @@ import android.widget.AdapterView
 import android.widget.ListView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import java.util.ArrayList
 
 class RivalryActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,17 +39,20 @@ class RivalryActivity : AppCompatActivity() {
 
         //Set up games listview
         if (currentRivalry != null) {
-            val listView : ListView = findViewById<ListView>(R.id.listview_games)
-            val adapter = GameAdapter(this, currentRivalry.games)
+            val listView: ListView = findViewById<ListView>(R.id.listview_games)
+            val adapter = GameAdapter(
+                this,
+                currentRivalry.games.reversed() as ArrayList<Game>
+            )
             listView.adapter = adapter
-            listView.onItemClickListener = AdapterView.OnItemClickListener {
-                    parent, view, position, id ->
-                val selectedGameId = view.tag.toString().toInt()
-                val intent = Intent(this, GameActivity::class.java).apply {
-                    putExtra(GAME, selectedGameId)
+            listView.onItemClickListener =
+                AdapterView.OnItemClickListener { parent, view, position, id ->
+                    val selectedGameId = view.tag.toString().toInt()
+                    val intent = Intent(this, GameActivity::class.java).apply {
+                        putExtra(GAME, selectedGameId)
+                    }
+                    startActivity(intent)
                 }
-                startActivity(intent)
-            }
         }
     }
 }

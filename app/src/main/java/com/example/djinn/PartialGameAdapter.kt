@@ -45,13 +45,14 @@ class PartialGameAdapter(context: Context, partialGames: ArrayList<PartialGame>)
                     }
 
                 val bonusNote = listItemView.findViewById<View>(R.id.bonus_note) as TextView
-                if (currentPartialGame.type == "B") {
+                bonusNote.text = currentPartialGame.note
+                /*if (currentPartialGame.type == "B") {
                     bonusNote.text = currentPartialGame.note
                     bonusNote.visibility = View.VISIBLE
                 } else {
                     bonusNote.text = null
                     bonusNote.visibility = View.INVISIBLE
-                }
+                }*/
 
                 val sideDimen = context.resources.getDimension(R.dimen.side_margin).toInt()
 

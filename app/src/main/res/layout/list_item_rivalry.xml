@@ -6,6 +6,8 @@
     android:gravity="center"
     android:id="@+id/album_item"
     android:background="?android:attr/selectableItemBackground"
+    android:clipChildren="false"
+    android:clipToPadding="false"
     android:padding="12dp">
 
     <TextView
@@ -22,10 +24,10 @@
         android:id="@+id/image_visitor"
         android:layout_width="@dimen/square_badge_height_width"
         android:layout_height="@dimen/square_badge_height_width"
-        android:background="@color/colorPrimary"
+        android:background="@drawable/round_view_initials"
         android:layout_marginStart="12dp"
         android:layout_toEndOf="@id/score_visitor"
-        android:elevation="6dp" />
+        android:elevation="@dimen/high_elevation" />
 
     <TextView
         android:id="@+id/initials_visitor"
@@ -37,16 +39,16 @@
         android:layout_alignTop="@id/image_visitor"
         android:textAlignment="center"
         android:gravity="center"
-        android:elevation="6dp" />
+        android:elevation="@dimen/high_elevation" />
 
     <View
         android:id="@+id/image_home"
         android:layout_width="@dimen/square_badge_height_width"
         android:layout_height="@dimen/square_badge_height_width"
-        android:background="@color/colorPrimaryDark"
+        android:background="@drawable/round_view_initials"
         android:layout_marginEnd="12dp"
         android:layout_toStartOf="@id/score_home"
-        android:elevation="6dp" />
+        android:elevation="@dimen/high_elevation" />
 
     <TextView
         android:id="@+id/initials_home"
@@ -58,7 +60,7 @@
         android:layout_alignTop="@id/image_home"
         android:textAlignment="center"
         android:gravity="center"
-        android:elevation="6dp" />
+        android:elevation="@dimen/high_elevation" />
 
     <TextView
         android:id="@+id/score_home"

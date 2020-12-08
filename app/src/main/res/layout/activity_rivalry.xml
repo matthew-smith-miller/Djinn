@@ -35,11 +35,12 @@
 
         <View
             android:id="@+id/image_visitor"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
-            android:background="@color/colorPrimary"
+            android:layout_width="@dimen/square_badge_height_width"
+            android:layout_height="@dimen/square_badge_height_width"
+            android:layout_marginStart="@dimen/side_margin"
             android:layout_alignParentStart="true"
-            android:layout_marginStart="@dimen/side_margin" />
+            android:background="@drawable/round_view_initials"
+            android:elevation="@dimen/high_elevation" />
 
         <TextView
             android:id="@+id/initials_visitor"
@@ -49,6 +50,7 @@
             style="@style/HeaderText"
             android:layout_alignStart="@id/image_visitor"
             android:layout_alignTop="@id/image_visitor"
+            android:elevation="@dimen/high_elevation"
             android:textAlignment="center" />
 
         <TextView
@@ -64,9 +66,10 @@
             android:id="@+id/image_home"
             android:layout_width="@dimen/square_badge_height_width"
             android:layout_height="@dimen/square_badge_height_width"
-            android:background="@color/colorPrimaryDark"
+            android:layout_marginEnd="@dimen/side_margin"
             android:layout_alignParentEnd="true"
-            android:layout_marginEnd="@dimen/side_margin" />
+            android:background="@drawable/round_view_initials"
+            android:elevation="@dimen/high_elevation" />
 
         <TextView
             android:id="@+id/initials_home"
@@ -76,6 +79,7 @@
             style="@style/HeaderText"
             android:layout_alignStart="@id/image_home"
             android:layout_alignTop="@id/image_home"
+            android:elevation="@dimen/high_elevation"
             android:textAlignment="center" />
 
         <TextView

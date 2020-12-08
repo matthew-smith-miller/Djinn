@@ -26,7 +26,7 @@
 
         <TextView
             android:id="@+id/score_visitor"
-            android:layout_width="56dp"
+            android:layout_width="@dimen/square_badge_height_width"
             android:layout_height="wrap_content"
             tools:text="22"
             style="@style/HeaderText"
@@ -36,20 +36,23 @@
 
         <View
             android:id="@+id/image_visitor"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
-            android:background="@color/colorPrimary"
-            android:layout_marginStart="6dp"/>
+            android:layout_width="@dimen/square_badge_height_width"
+            android:layout_height="@dimen/square_badge_height_width"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="@dimen/side_margin"
+            android:background="@drawable/round_view_initials"
+            android:elevation="@dimen/high_elevation" />
 
         <TextView
             android:id="@+id/initials_visitor"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
+            android:layout_width="@dimen/square_badge_height_width"
+            android:layout_height="@dimen/square_badge_height_width"
             tools:text="S"
             style="@style/HeaderText"
             android:layout_alignStart="@id/image_visitor"
             android:layout_alignTop="@id/image_visitor"
-            android:textAlignment="center"/>
+            android:elevation="@dimen/high_elevation"
+            android:textAlignment="center" />
 
         <TextView
             android:id="@+id/versus_text"
@@ -57,32 +60,32 @@
             android:layout_height="56dp"
             tools:text="vs."
             style="@style/HeaderTextSecondary"
-            android:layout_toEndOf="@id/image_visitor"
-            android:layout_marginStart="60dp"
+            android:layout_centerHorizontal="true"
             android:textAlignment="center"/>
 
         <View
             android:id="@+id/image_home"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
-            android:background="@color/colorPrimaryDark"
-            android:layout_marginStart="60dp"
-            android:layout_marginEnd="6dp"
-            android:layout_toEndOf="@id/versus_text"/>
+            android:layout_width="@dimen/square_badge_height_width"
+            android:layout_height="@dimen/square_badge_height_width"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="@dimen/side_margin"
+            android:background="@drawable/round_view_initials"
+            android:elevation="@dimen/high_elevation" />
 
         <TextView
             android:id="@+id/initials_home"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
+            android:layout_width="@dimen/square_badge_height_width"
+            android:layout_height="@dimen/square_badge_height_width"
             tools:text="MM"
             style="@style/HeaderText"
             android:layout_alignStart="@id/image_home"
             android:layout_alignTop="@id/image_home"
-            android:textAlignment="center"/>
+            android:elevation="@dimen/high_elevation"
+            android:textAlignment="center" />
 
         <TextView
             android:id="@+id/score_home"
-            android:layout_width="56dp"
+            android:layout_width="@dimen/square_badge_height_width"
             android:layout_height="wrap_content"
             tools:text="93"
             style="@style/HeaderText"

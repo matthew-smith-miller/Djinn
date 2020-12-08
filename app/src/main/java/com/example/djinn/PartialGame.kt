@@ -25,7 +25,19 @@ data class PartialGame(
             type: String,
             rawScore: Int
         ): PartialGame {
-            return PartialGame(partialGameCount, game, player, type, null, rawScore)
+            return PartialGame(
+                partialGameCount,
+                game,
+                player,
+                type,
+                when (type) {
+                    "K" -> "Knock"
+                    "G" -> "Gin"
+                    "R" -> "Reverse"
+                    else -> null
+                },
+                rawScore
+            )
         }
 
         fun makeBonus(
