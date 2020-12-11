@@ -3,9 +3,7 @@ package com.example.djinn
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.widget.AdapterView
-import android.widget.ListView
-import android.widget.TextView
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import java.util.ArrayList
 
@@ -53,6 +51,26 @@ class RivalryActivity : AppCompatActivity() {
                     }
                     startActivity(intent)
                 }
+        }
+
+        (findViewById<View>(R.id.button_add_game) as ImageButton).setOnClickListener {
+            if (currentRivalry != null) {
+                var id: Int? = null
+                if (currentRivalry.games.reversed()[0].status != "Active") {
+                    id = Game.makeGame(currentRivalry.id).id
+                } else {
+                    id = currentRivalry.games.reversed()[0].id
+                    Toast.makeText(
+                        this,
+                        "An active game already exists",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+                val intent = Intent(this, GameActivity::class.java).apply {
+                    putExtra(GAME, id)
+                }
+                startActivity(intent)
+            }
         }
     }
 }

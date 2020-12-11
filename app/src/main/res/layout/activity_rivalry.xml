@@ -1,9 +1,11 @@
-<LinearLayout
-    android:layout_width="match_parent"
+<LinearLayout android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:clipChildren="false"
+    android:clipToPadding="false"
     android:orientation="vertical">
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -99,15 +101,21 @@
             tools:text="335"
             style="@style/HeaderText"
             android:layout_alignTop="@id/score_visitor"
-            android:layout_alignStart="@id/image_home"/>
+            android:layout_alignStart="@id/image_home" />
     </RelativeLayout>
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+
+    <ImageButton
+        android:id="@+id/button_add_game"
+        android:layout_width="@dimen/small_circle_height_width"
+        android:layout_height="@dimen/small_circle_height_width"
         android:layout_gravity="center_horizontal"
-        android:text="New"/>
+        android:background="@drawable/round_button"
+        android:elevation="@dimen/low_elevation"
+        android:src="@drawable/ic_baseline_add_24" />
+
     <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/listview_games"/>
+        android:id="@+id/listview_games"
+        tools:listitem="@layout/list_item_game" />
 </LinearLayout>
