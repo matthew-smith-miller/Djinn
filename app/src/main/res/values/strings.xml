@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">Djinn</string>
+    <string name="dialog_title">Add partial game</string>
+    <string name="dialog_description">Select the type of partial game you would like to add and enter the raw score (bonuses will be added automatically)</string>
+    <string name="dialog_add">Add</string>
+    <string name="dialog_cancel">Cancel</string>
+    <string name="partial_game_knock">Knock</string>
+    <string name="partial_game_gin">Gin</string>
+    <string name="partial_game_reverse">Reverse</string>
+    <string name="partial_game_bonus">Bonus</string>
 </resources>

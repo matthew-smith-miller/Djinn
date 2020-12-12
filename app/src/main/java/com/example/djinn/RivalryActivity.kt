@@ -53,6 +53,7 @@ class RivalryActivity : AppCompatActivity() {
                 }
         }
 
+        //Set up new game button
         (findViewById<View>(R.id.button_add_game) as ImageButton).setOnClickListener {
             if (currentRivalry != null) {
                 var id: Int? = null

@@ -30,13 +30,13 @@ class PartialGameAdapter(context: Context, partialGames: ArrayList<PartialGame>)
                 val badge = listItemView.findViewById<View>(R.id.score_badge)
                 badge?.background =
                     when (currentPartialGame.type) {
-                        "G" -> ContextCompat.getDrawable(
+                        "Gin" -> ContextCompat.getDrawable(
                             context, R.drawable.round_view_gin
                         )
-                        "R" -> ContextCompat.getDrawable(
+                        "Reverse" -> ContextCompat.getDrawable(
                             context, R.drawable.round_view_reverse
                         )
-                        "B" -> ContextCompat.getDrawable(
+                        "Bonus" -> ContextCompat.getDrawable(
                             context, R.drawable.round_view_bonus
                         )
                         else -> ContextCompat.getDrawable(

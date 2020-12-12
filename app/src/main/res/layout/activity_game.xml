@@ -5,14 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/game_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        tools:text="Game 5"
-        style="@style/HeaderTextSecondary"
-        android:layout_marginTop="6dp"
-        android:layout_marginBottom="12dp"/>
+
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -21,7 +14,15 @@
         android:gravity="center_horizontal"
         android:id="@+id/album_item"
         android:background="?android:attr/selectableItemBackground"
-        android:padding="12dp">
+        android:padding="@dimen/list_item_root_padding">
+
+        <TextView
+            android:id="@+id/game_title"
+            style="@style/HeaderTextSecondary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            tools:text="Game 5" />
 
 
         <TextView
@@ -41,6 +42,7 @@
             android:layout_alignParentStart="true"
             android:layout_marginStart="@dimen/side_margin"
             android:background="@drawable/round_view_initials"
+            android:layout_marginTop="@dimen/list_item_root_padding"
             android:elevation="@dimen/high_elevation" />
 
         <TextView
@@ -61,6 +63,7 @@
             tools:text="vs."
             style="@style/HeaderTextSecondary"
             android:layout_centerHorizontal="true"
+            android:layout_alignTop="@id/image_visitor"
             android:textAlignment="center"/>
 
         <View
@@ -70,6 +73,7 @@
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="@dimen/side_margin"
             android:background="@drawable/round_view_initials"
+            android:layout_alignTop="@id/image_visitor"
             android:elevation="@dimen/high_elevation" />
 
         <TextView
@@ -101,6 +105,16 @@
         android:background="@drawable/round_button"
         android:elevation="@dimen/low_elevation"
         android:src="@drawable/ic_baseline_add_24" />
+
+    <ImageButton
+        android:id="@+id/button_swipe_add_partial_game"
+        android:layout_width="@dimen/small_circle_height_width"
+        android:layout_height="@dimen/small_circle_height_width"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/round_button"
+        android:elevation="@dimen/low_elevation"
+        android:src="@drawable/ic_baseline_code_24"
+        android:visibility="gone" />
 
     <ListView
         android:layout_width="match_parent"

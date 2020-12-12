@@ -4,14 +4,14 @@ data class PartialGame(
     val id: Int,
     val game: Int,
     val player: Int,
-    val type: String = "K",
+    val type: String,
     val note: String?,
     val rawScore: Int = 0
 ) {
 
     val totalScore = rawScore + when (type) {
-        "G" -> 20
-        "R" -> 10
+        "Gin" -> 20
+        "Reverse" -> 10
         else -> 0
     }
 
@@ -31,10 +31,8 @@ data class PartialGame(
                 player,
                 type,
                 when (type) {
-                    "K" -> "Knock"
-                    "G" -> "Gin"
-                    "R" -> "Reverse"
-                    else -> null
+                    "Bonus" -> null
+                    else -> type
                 },
                 rawScore
             )
@@ -46,7 +44,7 @@ data class PartialGame(
             note: String,
             rawScore: Int
         ): PartialGame {
-            return PartialGame(partialGameCount, game, player, "B", note, rawScore)
+            return PartialGame(partialGameCount, game, player, "Bonus", note, rawScore)
         }
 
         fun getPartialGame(id: Int?): PartialGame? {

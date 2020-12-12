@@ -57,7 +57,7 @@
 
         <TextView
             android:id="@+id/versus_text"
-            style="@style/HeaderTextSecondary"
+            style="@style/HeaderTextSecondaryLight"
             android:layout_width="@dimen/square_badge_height_width"
             android:layout_height="@dimen/square_badge_height_width"
             android:layout_centerHorizontal="true"

@@ -70,7 +70,7 @@ data class Game (val id: Int, val rivalry: Int) {
         }
 
         for (partialGame in partialGames) {
-            if (partialGame.type != "B") {
+            if (partialGame.type != "Bonus") {
                 when (partialGame.player) {
                     Rivalry.getRivalry(rivalry)?.homePlayer -> homePartialBonus += 20
                     Rivalry.getRivalry(rivalry)?.visitorPlayer -> visitorPartialBonus += 20

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="@dimen/list_item_root_padding">
+
+    <EditText
+        android:id="@+id/edit_text_raw_score"
+        style="@style/HeaderText"
+        android:layout_width="@dimen/main_activity_score_width"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/small_gap"
+        android:inputType="number"
+        android:textAlignment="center"
+        tools:text="40" />
+
+    <Spinner
+        android:id="@+id/spinner_partial_game_types"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+</LinearLayout>
