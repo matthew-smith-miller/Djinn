@@ -33,8 +33,8 @@ class PartialGameAdapter(context: Context, partialGames: ArrayList<PartialGame>)
                         "Gin" -> ContextCompat.getDrawable(
                             context, R.drawable.round_view_gin
                         )
-                        "Reverse" -> ContextCompat.getDrawable(
-                            context, R.drawable.round_view_reverse
+                        "Undercut" -> ContextCompat.getDrawable(
+                            context, R.drawable.round_view_undercut
                         )
                         "Bonus" -> ContextCompat.getDrawable(
                             context, R.drawable.round_view_bonus

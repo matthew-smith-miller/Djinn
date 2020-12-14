@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
+import java.text.SimpleDateFormat
 import java.time.format.DateTimeFormatter
 import java.util.*
 
@@ -30,7 +31,8 @@ class GameAdapter(context: Context, games: ArrayList<Game>) :
             (listItemView?.findViewById<View>(R.id.score_home) as TextView).text = it.toString()
         }
         if (currentGame?.endDate != null) {
-            currentGame.endDate!!.format(DateTimeFormatter.ofPattern("MM/dd")).let {
+            val dateFormat = SimpleDateFormat("MM/dd")
+            dateFormat.format(currentGame.endDate!!).let {
                 (listItemView?.findViewById<View>(R.id.game_date) as TextView).text = it
             }
         } else {

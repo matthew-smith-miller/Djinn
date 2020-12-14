@@ -1,28 +1,42 @@
 package com.example.djinn
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.Ignore
+import androidx.room.PrimaryKey
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.*
 
-data class Game (val id: Int, val rivalry: Int) {
-    val numberOfGames = Rivalry.getRivalry(rivalry)?.games?.size
-    val number: Int =
-        if (numberOfGames != null) {
-            numberOfGames + 1
-        } else {
-            id
-        }
-    var homeScore: Int = 0
-    var visitorScore: Int = 0
+@Entity
+data class Game(
+    @PrimaryKey val id: Int,
+    val number: Int,
+    val rivalry: Int,
+    @ColumnInfo(name = "home_score") var homeScore: Int = 0,
+    @ColumnInfo(name = "visitor_score") var visitorScore: Int = 0,
+    var status: String = "Active",
+    @ColumnInfo(name = "end_date") var endDate: Date? = null
+) {
+
+
+    @Ignore
     val partialGames = arrayListOf<PartialGame>()
-    var status = "Active"
-    var endDate: LocalDate? = null
 
     companion object GameManager {
         var gameCount = 0
         val gameMap = hashMapOf<Int, Game>()
 
         fun makeGame(rivalry: Int): Game {
-            return Game(gameCount, rivalry)
+            val numberOfGames = Rivalry.getRivalry(rivalry)?.games?.size
+            return Game(
+                gameCount,
+                if (numberOfGames != null) {
+                    numberOfGames + 1 ?: 0
+                } else {
+                    0
+                },
+                rivalry
+            )
         }
 
         fun getGame(id: Int?): Game? {
@@ -53,7 +67,7 @@ data class Game (val id: Int, val rivalry: Int) {
 
     private fun endGame() {
         status = "Completed"
-        endDate = LocalDate.now()
+        endDate = Calendar.getInstance().time
         var homePartialBonus = 0
         var visitorPartialBonus = 0
 

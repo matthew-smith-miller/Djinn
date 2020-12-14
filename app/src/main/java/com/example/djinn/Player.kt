@@ -1,15 +1,24 @@
 package com.example.djinn
 
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import java.time.LocalDateTime
+import java.util.*
 
-data class Player(val id: Int, var name: String, var initials: String) {
-    val createdDate = LocalDateTime.now()
-    var lastModifiedDate = createdDate
+@Entity
+data class Player(
+    @PrimaryKey(autoGenerate = true) val id: Int,
+    var name: String,
+    var initials: String,
+    @ColumnInfo(name = "created_date") val createdDate: Date = Calendar.getInstance().time,
+    @ColumnInfo(name = "last_modified_date") var lastModifiedDate: Date = createdDate
+) {
 
     companion object PlayerManager {
         var playerCount = 0
         val players = arrayListOf<Player>()
-        val playerMap = hashMapOf<Int,Player>()
+        val playerMap = hashMapOf<Int, Player>()
 
         fun makePlayer(name: String): Player {
             val names = name.split(" ")

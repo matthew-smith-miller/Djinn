@@ -5,8 +5,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical">
 
-
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -61,7 +59,7 @@
             android:layout_width="40dp"
             android:layout_height="56dp"
             tools:text="vs."
-            style="@style/HeaderTextSecondary"
+            style="@style/HeaderTextSecondaryLight"
             android:layout_centerHorizontal="true"
             android:layout_alignTop="@id/image_visitor"
             android:textAlignment="center"/>

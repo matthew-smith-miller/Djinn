@@ -14,8 +14,36 @@ class GameActivity : FragmentActivity(),
     PartialGameDialogFragment.PartialGameDialogListener {
     var currentGame: Game? = null
 
-    fun showPartialGameDialog() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_game)
+
+        currentGame = Game.getGame(
+            intent.getIntExtra(GAME, -1)
+        )
+        setGameInfo()
+        setPartialGameListView()
+        setAddPartialGameButton()
+    }
+
+    private fun showPartialGameDialog() {
+        val bundle = Bundle()
+        bundle.putStringArray(
+            "playerNames",
+            arrayOf(
+                Player.getPlayer(Rivalry.getRivalry(currentGame?.rivalry)?.visitorPlayer)?.name,
+                Player.getPlayer(Rivalry.getRivalry(currentGame?.rivalry)?.homePlayer)?.name
+            )
+        )
+        bundle.putIntegerArrayList(
+            "playerIds",
+            arrayListOf(
+                Player.getPlayer(Rivalry.getRivalry(currentGame?.rivalry)?.visitorPlayer)?.id,
+                Player.getPlayer(Rivalry.getRivalry(currentGame?.rivalry)?.homePlayer)?.id
+            )
+        )
         val dialog = PartialGameDialogFragment()
+        dialog.arguments = bundle;
         dialog.show(supportFragmentManager, "PartialGameDialogFragment")
     }
 
@@ -32,7 +60,9 @@ class GameActivity : FragmentActivity(),
                 type = type,
                 rawScore = rawScore
             )
-            setPartialGameListView(currentGame!!)
+            setGameInfo()
+            setPartialGameListView()
+            setAddPartialGameButton()
         }
     }
 
@@ -40,37 +70,26 @@ class GameActivity : FragmentActivity(),
         //Nothing
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_game)
-
-        currentGame = Game.getGame(
-            intent.getIntExtra(GAME, -1)
-        )
-        currentGame?.let { setGameInfo(it) }
-        currentGame?.let { setAddPartialGameButton(it) }
-        currentGame?.let { setPartialGameListView(it) }
-    }
 
     /**
      * Sets up game info
      */
-    fun setGameInfo(currentGame: Game) {
-        currentGame.visitorScore.let {
+    private fun setGameInfo() {
+        currentGame?.visitorScore.let {
             (findViewById<View>(R.id.score_visitor) as TextView).text = it.toString()
         }
-        Rivalry.getRivalry(currentGame.rivalry)?.visitorPlayer?.let {
+        Rivalry.getRivalry(currentGame?.rivalry)?.visitorPlayer?.let {
             (findViewById<View>(R.id.initials_visitor) as TextView).text =
                 Player.getPlayer(it)?.initials
         }
-        currentGame.homeScore.let {
+        currentGame?.homeScore.let {
             (findViewById<View>(R.id.score_home) as TextView).text = it.toString()
         }
-        Rivalry.getRivalry(currentGame.rivalry)?.homePlayer?.let {
+        Rivalry.getRivalry(currentGame?.rivalry)?.homePlayer?.let {
             (findViewById<View>(R.id.initials_home) as TextView).text =
                 Player.getPlayer(it)?.initials
         }
-        currentGame.number.let {
+        currentGame?.number.let {
             (findViewById<View>(R.id.game_title) as TextView).text = "Game " + it.toString()
         }
     }
@@ -78,13 +97,13 @@ class GameActivity : FragmentActivity(),
     /**
      * Sets up or hides add partial game button
      */
-    fun setAddPartialGameButton(currentGame: Game) {
+    private fun setAddPartialGameButton() {
 
-        if (currentGame.status == "Active") {
+        if (currentGame?.status == "Active") {
             (findViewById<View>(R.id.button_add_partial_game) as ImageButton).setOnClickListener {
                 showPartialGameDialog()
             }
-            val swipeButton = findViewById<View>(R.id.button_swipe_add_partial_game)
+            /*val swipeButton = findViewById<View>(R.id.button_swipe_add_partial_game)
             val partialGameGestureListener = GestureDetector(
                 this, PartialGameGestureListener()
             )
@@ -92,24 +111,22 @@ class GameActivity : FragmentActivity(),
                 OnTouchListener { v, event ->
                     partialGameGestureListener.onTouchEvent(event)
                 }
-            swipeButton.setOnTouchListener(touchListener)
+            swipeButton.setOnTouchListener(touchListener)*/
         } else {
             findViewById<View>(R.id.button_add_partial_game).visibility = View.GONE
-            findViewById<View>(R.id.button_swipe_add_partial_game).visibility = View.GONE
+            //findViewById<View>(R.id.button_swipe_add_partial_game).visibility = View.GONE
         }
-    }
-
-    fun moveSwipeButton(x: Float) {
-        val swipeButton = findViewById<View>(R.id.button_swipe_add_partial_game)
     }
 
     /**
      * Sets up partial games listview
      */
-    fun setPartialGameListView(currentGame: Game) {
+    private fun setPartialGameListView() {
         val listView: ListView = findViewById<ListView>(R.id.listview_games)
-        val adapter = PartialGameAdapter(this, currentGame.partialGames)
-        listView.adapter = adapter
+        if (currentGame != null) {
+            val adapter = PartialGameAdapter(this, currentGame!!.partialGames)
+            listView.adapter = adapter
+        }
     }
 
     class PartialGameGestureListener : GestureDetector.SimpleOnGestureListener() {
