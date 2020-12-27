@@ -3,21 +3,17 @@ package com.example.djinn
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ListView
 import androidx.room.Room
+import java.lang.NumberFormatException
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        val db = Room.databaseBuilder(
-            applicationContext,
-            AppDatabase::class.java,
-            "database-name"
-        ).build()
 
         makeData()
         setRivalryListView()
@@ -34,20 +30,24 @@ class MainActivity : AppCompatActivity() {
         listView.adapter = adapter
         listView.onItemClickListener =
             AdapterView.OnItemClickListener { parent, view, position, id ->
-                val selectedRivalryId = view.tag.toString().toInt()
-                val intent = Intent(this, RivalryActivity::class.java).apply {
-                    putExtra(RIVALRY, selectedRivalryId)
+                try {
+                    val selectedRivalryId = view.tag.toString().toInt()
+                    val intent = Intent(this, RivalryActivity::class.java).apply {
+                        putExtra(RIVALRY, selectedRivalryId)
+                    }
+                    startActivity(intent)
+                } catch (e: NumberFormatException) {
+                    Log.e("MainActivity", e.toString())
                 }
-                startActivity(intent)
             }
     }
 
     private fun makeData() {
         if (Player.players.size == 0) {
-            val matt = Player.makePlayer("Matt Miller")
-            val neil = Player.makePlayer("Neil Katuna")
-            val scott = Player.makePlayer("Scott Liftman")
-            val barack = Player.makePlayer("Barack Obama")
+            val matt = Player.makePlayer("Matt Miller", R.drawable.matt, true)
+            val neil = Player.makePlayer("Neil Katuna", R.drawable.neil, false)
+            val scott = Player.makePlayer("Scott Liftman", R.drawable.scott, false)
+            val barack = Player.makePlayer("Barack Obama", R.drawable.barack, false)
             val neilRivalry = Rivalry.makeRivalry(neil.id)
             val barackRivalry = Rivalry.makeRivalry(barack.id)
             val scottRivalry = Rivalry.makeRivalry(scott.id)

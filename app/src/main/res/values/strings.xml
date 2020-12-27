@@ -6,6 +6,7 @@
     <string name="dialog_cancel">Cancel</string>
     <string name="partial_game_knock">Knock</string>
     <string name="partial_game_gin">Gin</string>
-    <string name="partial_game_reverse">Reverse</string>
+    <string name="partial_game_undercut">Undercut</string>
     <string name="partial_game_bonus">Bonus</string>
+    <string name="view_game">View Game</string>
 </resources>

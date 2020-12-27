@@ -44,15 +44,8 @@ class PartialGameAdapter(context: Context, partialGames: ArrayList<PartialGame>)
                         )
                     }
 
-                val bonusNote = listItemView.findViewById<View>(R.id.bonus_note) as TextView
+                val bonusNote = listItemView.findViewById<View>(R.id.note) as TextView
                 bonusNote.text = currentPartialGame.note
-                /*if (currentPartialGame.type == "B") {
-                    bonusNote.text = currentPartialGame.note
-                    bonusNote.visibility = View.VISIBLE
-                } else {
-                    bonusNote.text = null
-                    bonusNote.visibility = View.INVISIBLE
-                }*/
 
                 val sideDimen = context.resources.getDimension(R.dimen.side_margin).toInt()
 
@@ -65,30 +58,9 @@ class PartialGameAdapter(context: Context, partialGames: ArrayList<PartialGame>)
                     val badgeLayoutParams = badge?.layoutParams as RelativeLayout.LayoutParams
                     badgeLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_START)
                     badgeLayoutParams.removeRule(RelativeLayout.ALIGN_PARENT_END)
-                    /*badgeLayoutParams.setMargins(
-                        context.resources.getDimension(R.dimen.side_margin).toInt(),
-                        badgeLayoutParams.topMargin,
-                        0,
-                        badgeLayoutParams.bottomMargin
-                    )*/
                     badgeLayoutParams.marginStart = sideDimen
                     badgeLayoutParams.marginEnd = 0
                     badge.layoutParams = badgeLayoutParams
-
-//                    setMargins(
-//                        badge,
-//                        sideDimen,
-//                        0,
-//                        0,
-//                        0)
-
-                    /*val badgeMarginParams = badge.layoutParams as LinearLayout.LayoutParams
-                    badgeMarginParams.setMargins(
-                        context.resources.getDimension(R.dimen.side_margin).toInt(),
-                        badgeMarginParams.topMargin,
-                        0,
-                        badgeMarginParams.bottomMargin)
-                    badge.layoutParams = badgeMarginParams*/
 
                     val bonusNoteLayoutParams =
                         bonusNote.layoutParams as RelativeLayout.LayoutParams
@@ -105,30 +77,9 @@ class PartialGameAdapter(context: Context, partialGames: ArrayList<PartialGame>)
                     val badgeLayoutParams = badge?.layoutParams as RelativeLayout.LayoutParams
                     badgeLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_END)
                     badgeLayoutParams.removeRule(RelativeLayout.ALIGN_PARENT_START)
-                    /*badgeLayoutParams.setMargins(
-                        0,
-                        badgeLayoutParams.topMargin,
-                        context.resources.getDimension(R.dimen.side_margin).toInt(),
-                        badgeLayoutParams.bottomMargin
-                    )*/
                     badgeLayoutParams.marginStart = 0
                     badgeLayoutParams.marginEnd = sideDimen
                     badge.layoutParams = badgeLayoutParams
-
-//                    setMargins(
-//                        badge,
-//                        0,
-//                        0,
-//                        sideDimen,
-//                        0)
-
-                    /*val badgeMarginParams = badge.layoutParams as LinearLayout.LayoutParams
-                    badgeMarginParams.setMargins(
-                        0,
-                        badgeMarginParams.topMargin,
-                        context.resources.getDimension(R.dimen.side_margin).toInt(),
-                        badgeMarginParams.bottomMargin)
-                    badge.layoutParams = badgeMarginParams*/
 
                     val bonusNoteLayoutParams =
                         bonusNote.layoutParams as RelativeLayout.LayoutParams

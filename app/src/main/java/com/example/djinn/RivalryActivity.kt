@@ -2,21 +2,24 @@ package com.example.djinn
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import java.util.ArrayList
 
 class RivalryActivity : AppCompatActivity() {
-
-    var currentRivalry: Rivalry? = null
+    private var currentRivalry: Rivalry? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_rivalry)
+
         currentRivalry = Rivalry.getRivalry(
             intent.getIntExtra(RIVALRY, -1)
         )
+
+        Log.d("RivalryActivity", currentRivalry?.id.toString())
 
         setRivalryInfo()
         setGameListView()
@@ -25,6 +28,7 @@ class RivalryActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+
         setRivalryInfo()
         setGameListView()
         setAddGameButton()
@@ -43,20 +47,34 @@ class RivalryActivity : AppCompatActivity() {
         currentRivalry?.visitorScore?.let {
             (findViewById<View>(R.id.score_visitor) as TextView).text = it.toString()
         }
-        currentRivalry?.visitorPlayer?.let {
+        currentRivalry?.homeScore?.let {
+            (findViewById<View>(R.id.score_home) as TextView).text = it.toString()
+        }
+        /*currentRivalry?.visitorPlayer?.let {
             (findViewById<View>(R.id.initials_visitor) as TextView).text =
                 Player.getPlayer(it)?.initials
             (findViewById<View>(R.id.name_visitor) as TextView).text =
                 Player.getPlayer(it)?.name
-        }
-        currentRivalry?.homeScore?.let {
-            (findViewById<View>(R.id.score_home) as TextView).text = it.toString()
         }
         currentRivalry?.homePlayer?.let {
             (findViewById<View>(R.id.initials_home) as TextView).text =
                 Player.getPlayer(it)?.initials
             (findViewById<View>(R.id.name_home) as TextView).text =
                 Player.getPlayer(it)?.name
+        }*/
+        Player.getPlayer(currentRivalry?.visitorPlayer)?.image.let {
+            if (it != null) {
+                (findViewById<View>(R.id.round_image_visitor) as ImageView).setImageResource(
+                    it
+                )
+            }
+        }
+        Player.getPlayer(currentRivalry?.homePlayer)?.image.let {
+            if (it != null) {
+                (findViewById<View>(R.id.round_image_home) as ImageView).setImageResource(
+                    it
+                )
+            }
         }
     }
 

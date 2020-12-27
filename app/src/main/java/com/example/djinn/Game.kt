@@ -9,7 +9,7 @@ import java.util.*
 
 @Entity
 data class Game(
-    @PrimaryKey val id: Int,
+    @PrimaryKey(autoGenerate = true) val id: Int,
     val number: Int,
     val rivalry: Int,
     @ColumnInfo(name = "home_score") var homeScore: Int = 0,
@@ -23,13 +23,12 @@ data class Game(
     val partialGames = arrayListOf<PartialGame>()
 
     companion object GameManager {
-        var gameCount = 0
         val gameMap = hashMapOf<Int, Game>()
 
         fun makeGame(rivalry: Int): Game {
             val numberOfGames = Rivalry.getRivalry(rivalry)?.games?.size
             return Game(
-                gameCount,
+                0,
                 if (numberOfGames != null) {
                     numberOfGames + 1 ?: 0
                 } else {
@@ -48,7 +47,6 @@ data class Game(
     }
 
     init {
-        gameCount++
         Rivalry.getRivalry(rivalry)?.games?.add(this)
         gameMap[id] = this
     }

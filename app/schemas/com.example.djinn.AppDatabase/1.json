@@ -2,24 +2,12 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "66da9d207e18bfc427a96fcbb8cda1a7",
+    "identityHash": "e414e9f96f2eb16b0798a90f7d61c2e6",
     "entities": [
       {
         "tableName": "Player",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`created_date` INTEGER NOT NULL, `last_modified_date` INTEGER NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `initials` TEXT NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `initials` TEXT NOT NULL, `image` INTEGER NOT NULL, `created_date` INTEGER NOT NULL, `last_modified_date` INTEGER NOT NULL)",
         "fields": [
-          {
-            "fieldPath": "createdDate",
-            "columnName": "created_date",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "lastModifiedDate",
-            "columnName": "last_modified_date",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
           {
             "fieldPath": "id",
             "columnName": "id",
@@ -37,6 +25,24 @@
             "columnName": "initials",
             "affinity": "TEXT",
             "notNull": true
+          },
+          {
+            "fieldPath": "image",
+            "columnName": "image",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "createdDate",
+            "columnName": "created_date",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lastModifiedDate",
+            "columnName": "last_modified_date",
+            "affinity": "INTEGER",
+            "notNull": true
           }
         ],
         "primaryKey": {
@@ -50,8 +56,26 @@
       },
       {
         "tableName": "Rivalry",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`visitor_score` INTEGER NOT NULL, `home_score` INTEGER NOT NULL, `created_date` INTEGER NOT NULL, `last_modified_date` INTEGER NOT NULL, `id` INTEGER NOT NULL, `home_player` INTEGER NOT NULL, `visitor_player` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `visitor_player` INTEGER NOT NULL, `home_player` INTEGER NOT NULL, `visitor_score` INTEGER NOT NULL, `home_score` INTEGER NOT NULL, `created_date` INTEGER NOT NULL, `last_modified_date` INTEGER NOT NULL)",
         "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "visitorPlayer",
+            "columnName": "visitor_player",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "homePlayer",
+            "columnName": "home_player",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
           {
             "fieldPath": "visitorScore",
             "columnName": "visitor_score",
@@ -75,7 +99,21 @@
             "columnName": "last_modified_date",
             "affinity": "INTEGER",
             "notNull": true
-          },
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "Game",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `number` INTEGER NOT NULL, `rivalry` INTEGER NOT NULL, `home_score` INTEGER NOT NULL, `visitor_score` INTEGER NOT NULL, `status` TEXT NOT NULL, `end_date` INTEGER)",
+        "fields": [
           {
             "fieldPath": "id",
             "columnName": "id",
@@ -83,34 +121,14 @@
             "notNull": true
           },
           {
-            "fieldPath": "homePlayer",
-            "columnName": "home_player",
+            "fieldPath": "number",
+            "columnName": "number",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "visitorPlayer",
-            "columnName": "visitor_player",
-            "affinity": "INTEGER",
-            "notNull": true
-          }
-        ],
-        "primaryKey": {
-          "columnNames": [
-            "id"
-          ],
-          "autoGenerate": false
-        },
-        "indices": [],
-        "foreignKeys": []
-      },
-      {
-        "tableName": "Game",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`number` INTEGER NOT NULL, `home_score` INTEGER NOT NULL, `visitor_score` INTEGER NOT NULL, `status` TEXT NOT NULL, `end_date` INTEGER, `id` INTEGER NOT NULL, `rivalry` INTEGER NOT NULL, PRIMARY KEY(`id`))",
-        "fields": [
-          {
-            "fieldPath": "number",
-            "columnName": "number",
+            "fieldPath": "rivalry",
+            "columnName": "rivalry",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -137,39 +155,21 @@
             "columnName": "end_date",
             "affinity": "INTEGER",
             "notNull": false
-          },
-          {
-            "fieldPath": "id",
-            "columnName": "id",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "rivalry",
-            "columnName": "rivalry",
-            "affinity": "INTEGER",
-            "notNull": true
           }
         ],
         "primaryKey": {
           "columnNames": [
             "id"
           ],
-          "autoGenerate": false
+          "autoGenerate": true
         },
         "indices": [],
         "foreignKeys": []
       },
       {
         "tableName": "PartialGame",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`total_score` INTEGER NOT NULL, `id` INTEGER NOT NULL, `game` INTEGER NOT NULL, `player` INTEGER NOT NULL, `type` TEXT NOT NULL, `note` TEXT, `raw_score` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `game` INTEGER NOT NULL, `player` INTEGER NOT NULL, `player_role` TEXT NOT NULL, `type` TEXT NOT NULL, `note` TEXT, `raw_score` INTEGER NOT NULL, `total_score` INTEGER NOT NULL)",
         "fields": [
-          {
-            "fieldPath": "totalScore",
-            "columnName": "total_score",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
           {
             "fieldPath": "id",
             "columnName": "id",
@@ -189,6 +189,12 @@
             "notNull": true
           },
           {
+            "fieldPath": "playerRole",
+            "columnName": "player_role",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
             "fieldPath": "type",
             "columnName": "type",
             "affinity": "TEXT",
@@ -205,13 +211,19 @@
             "columnName": "raw_score",
             "affinity": "INTEGER",
             "notNull": true
+          },
+          {
+            "fieldPath": "totalScore",
+            "columnName": "total_score",
+            "affinity": "INTEGER",
+            "notNull": true
           }
         ],
         "primaryKey": {
           "columnNames": [
             "id"
           ],
-          "autoGenerate": false
+          "autoGenerate": true
         },
         "indices": [],
         "foreignKeys": []
@@ -220,7 +232,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '66da9d207e18bfc427a96fcbb8cda1a7')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'e414e9f96f2eb16b0798a90f7d61c2e6')"
     ]
   }
 }

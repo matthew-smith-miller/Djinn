@@ -8,9 +8,9 @@ import java.util.*
 
 @Entity
 data class Rivalry(
-    @PrimaryKey val id: Int,
-    @ColumnInfo(name = "home_player") val homePlayer: Int,
+    @PrimaryKey(autoGenerate = true) val id: Int,
     @ColumnInfo(name = "visitor_player") val visitorPlayer: Int,
+    @ColumnInfo(name = "home_player") val homePlayer: Int,
     @ColumnInfo(name = "visitor_score") var visitorScore: Int = 0,
     @ColumnInfo(name = "home_score") var homeScore: Int = 0,
     @ColumnInfo(name = "created_date") val createdDate: Date = Calendar.getInstance().time,
@@ -20,12 +20,11 @@ data class Rivalry(
     val games = arrayListOf<Game>()
 
     companion object RivalryManager {
-        var rivalryCount = 0
         val rivalries = arrayListOf<Rivalry>()
         val rivalryMap = hashMapOf<Int, Rivalry>()
 
-        fun makeRivalry(opponent: Int): Rivalry {
-            return Rivalry(rivalryCount, HOME_PLAYER, opponent)
+        fun makeRivalry(visitor: Int): Rivalry {
+            return Rivalry(0, visitor, HOME_PLAYER)
         }
 
         fun getRivalry(id: Int?): Rivalry? {
@@ -37,7 +36,6 @@ data class Rivalry(
     }
 
     init {
-        rivalryCount++
         rivalries.add(this)
         rivalryMap[id] = this
     }

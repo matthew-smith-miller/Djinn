@@ -20,6 +20,7 @@ class PartialGameDialogFragment : DialogFragment() {
         fun onDialogPositiveClick(
             dialog: DialogFragment,
             player: Int,
+            playerRole: String,
             type: String,
             rawScore: Int
         )
@@ -86,9 +87,13 @@ class PartialGameDialogFragment : DialogFragment() {
                         ) {
                             listener.onDialogPositiveClick(
                                 this@PartialGameDialogFragment,
-                                player = playerIds[spinnerPlayers.selectedItemPosition],
-                                type = spinnerTypes?.selectedItem.toString(),
-                                rawScore = dialogView.findViewById<EditText>(
+                                playerIds[spinnerPlayers.selectedItemPosition],
+                                when (spinnerPlayers.selectedItemPosition) {
+                                    0 -> "Home"
+                                    else -> "Visitor"
+                                },
+                                spinnerTypes?.selectedItem.toString(),
+                                dialogView.findViewById<EditText>(
                                     R.id.edit_text_raw_score
                                 ).text.toString().toInt()
                             )

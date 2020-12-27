@@ -10,7 +10,7 @@
 
     <TextView
         android:id="@+id/score_visitor"
-        android:layout_width="wrap_content"
+        android:layout_width="@dimen/square_badge_height_width"
         android:layout_height="@dimen/square_badge_height_width"
         android:layout_alignParentStart="true"
         android:layout_marginStart="@dimen/side_margin"
@@ -19,7 +19,7 @@
 
     <TextView
         android:id="@+id/game_date"
-        android:layout_width="wrap_content"
+        android:layout_width="@dimen/square_badge_height_width"
         android:layout_height="@dimen/square_badge_height_width"
         tools:text="10/2"
         style="@style/HeaderTextSecondaryLight"
@@ -29,7 +29,7 @@
 
     <TextView
         android:id="@+id/score_home"
-        android:layout_width="wrap_content"
+        android:layout_width="@dimen/square_badge_height_width"
         style="@style/HeaderText"
         android:layout_height="@dimen/square_badge_height_width"
         android:layout_alignParentEnd="true"

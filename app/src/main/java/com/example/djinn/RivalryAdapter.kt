@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.ImageView
 import android.widget.TextView
 import java.util.*
 
@@ -28,13 +29,27 @@ class RivalryAdapter(context: Context, rivalries: ArrayList<Rivalry>) :
         currentRivalry?.homeScore?.let {
             (listItemView?.findViewById<View>(R.id.score_home) as TextView).text = it.toString()
         }
-        currentRivalry?.visitorPlayer?.let {
+        /*currentRivalry?.visitorPlayer?.let {
             (listItemView?.findViewById<View>(R.id.initials_visitor) as TextView).text =
                 Player.getPlayer(it)?.initials
         }
         currentRivalry?.homePlayer?.let {
             (listItemView?.findViewById<View>(R.id.initials_home) as TextView).text =
                 Player.getPlayer(it)?.initials
+        }*/
+        Player.getPlayer(currentRivalry?.visitorPlayer)?.image.let {
+            if (it != null) {
+                (listItemView?.findViewById<View>(R.id.round_image_visitor) as ImageView).setImageResource(
+                    it
+                )
+            }
+        }
+        Player.getPlayer(currentRivalry?.homePlayer)?.image.let {
+            if (it != null) {
+                (listItemView?.findViewById<View>(R.id.round_image_home) as ImageView).setImageResource(
+                    it
+                )
+            }
         }
         listItemView?.tag = currentRivalry?.id
 

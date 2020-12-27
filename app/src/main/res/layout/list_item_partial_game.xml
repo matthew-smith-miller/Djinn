@@ -31,7 +31,7 @@
         android:gravity="center" />
 
     <TextView
-        android:id="@+id/bonus_note"
+        android:id="@+id/note"
         style="@style/HeaderTextTertiary"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/square_badge_height_width"

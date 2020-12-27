@@ -3,6 +3,6 @@
     <string-array name="dialog_partial_game_types">
         <item>@string/partial_game_knock</item>
         <item>@string/partial_game_gin</item>
-        <item>@string/partial_game_reverse</item>
+        <item>@string/partial_game_undercut</item>
     </string-array>
 </resources>
