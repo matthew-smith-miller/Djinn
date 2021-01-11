@@ -4,8 +4,10 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.*
+import androidx.activity.viewModels
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -13,6 +15,9 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 class GameActivity : FragmentActivity(),
     PartialGameDialogFragment.PartialGameDialogListener {
     private var currentGame: Game? = null
+    private val partialGameViewModel: PartialGameViewModel by viewModels {
+        PartialGameViewModelFactory((application as DjinnApplication).partialGameRepository)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,21 +25,21 @@ class GameActivity : FragmentActivity(),
         currentGame = Game.getGame(
             intent.getIntExtra(GAME, -1)
         )
-        Log.d("GameActivity", currentGame?.id.toString())
+
+        val recyclerView = findViewById<RecyclerView>(R.id.listview_games)
+        val adapter = PartialGameListAdapter()
+        recyclerView.adapter = adapter
+        recyclerView.layoutManager = LinearLayoutManager(this)
+
+        partialGameViewModel.getPartialGamesFromGameId(currentGame?.id)
+            .observe(owner = this) { partialGames ->
+                partialGames.let { adapter.submitList(it) }
+            }
         setGameInfo()
-        setPartialGameRecyclerView()
         setAddPartialGameButton()
         setToolbar()
     }
 
-    override fun onResume() {
-        super.onResume()
-        setGameInfo()
-        setPartialGameRecyclerView()
-        setAddPartialGameButton()
-        setToolbar()
-
-    }
 
     private fun showPartialGameDialog() {
         val bundle = Bundle()
@@ -65,14 +70,14 @@ class GameActivity : FragmentActivity(),
         rawScore: Int
     ) {
         if (currentGame != null) {
-            PartialGame.makePartialGame(
+            val partialGame = PartialGame.makePartialGame(
                 currentGame!!.id,
                 player,
                 type,
                 rawScore
             )
+            partialGameViewModel.insert(partialGame)
             setGameInfo()
-            setPartialGameRecyclerView()
             setAddPartialGameButton()
         }
     }
@@ -123,16 +128,6 @@ class GameActivity : FragmentActivity(),
         } else {
             findViewById<View>(R.id.fab_add_partial_game).visibility = View.GONE
         }
-    }
-
-    /**
-     * Sets up partial games RecyclerView
-     */
-    private fun setPartialGameRecyclerView() {
-        val recyclerView = findViewById<RecyclerView>(R.id.listview_games)
-        val adapter = PartialGameListAdapter()
-        recyclerView.adapter = adapter
-        recyclerView.layoutManager = LinearLayoutManager(this)
     }
 
     /**

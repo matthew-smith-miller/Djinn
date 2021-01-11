@@ -1,111 +1,66 @@
 package com.example.djinn
 
 import android.content.Intent
+import android.media.Image
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.*
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import java.util.ArrayList
+import androidx.lifecycle.observe
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import java.util.*
 
 class RivalryActivity : AppCompatActivity() {
     private var currentRivalry: Rivalry? = null
+    private val rivalryViewModel: RivalryViewModel by viewModels {
+        RivalryViewModelFactory((application as DjinnApplication).rivalryRepository)
+    }
+    private val playerViewModel: PlayerViewModel by viewModels {
+        PlayerViewModelFactory((application as DjinnApplication).playerRepository)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_rivalry)
 
-        currentRivalry = Rivalry.getRivalry(
-            intent.getIntExtra(RIVALRY, -1)
-        )
+        val recyclerView: RecyclerView = findViewById(R.id.listview_games)
+        val adapter = GameListAdapter { game -> adapterOnClick(game) }
+        recyclerView.adapter = adapter
+        recyclerView.layoutManager = LinearLayoutManager(this)
 
-        Log.d("RivalryActivity", currentRivalry?.id.toString())
+        val playerImageMap: TreeMap<Int, Int> = TreeMap()
 
-        setRivalryInfo()
-        setGameListView()
-        setAddGameButton()
-    }
-
-    override fun onResume() {
-        super.onResume()
-
-        setRivalryInfo()
-        setGameListView()
-        setAddGameButton()
-    }
-
-    override fun onContentChanged() {
-        super.onContentChanged()
-        findViewById<ListView>(R.id.listview_games).emptyView =
-            findViewById(R.id.listview_games_empty_text)
-    }
-
-    /**
-     * Set Rivalry info
-     */
-    private fun setRivalryInfo() {
-        currentRivalry?.visitorScore?.let {
-            (findViewById<View>(R.id.score_visitor) as TextView).text = it.toString()
-        }
-        currentRivalry?.homeScore?.let {
-            (findViewById<View>(R.id.score_home) as TextView).text = it.toString()
-        }
-        /*currentRivalry?.visitorPlayer?.let {
-            (findViewById<View>(R.id.initials_visitor) as TextView).text =
-                Player.getPlayer(it)?.initials
-            (findViewById<View>(R.id.name_visitor) as TextView).text =
-                Player.getPlayer(it)?.name
-        }
-        currentRivalry?.homePlayer?.let {
-            (findViewById<View>(R.id.initials_home) as TextView).text =
-                Player.getPlayer(it)?.initials
-            (findViewById<View>(R.id.name_home) as TextView).text =
-                Player.getPlayer(it)?.name
-        }*/
-        Player.getPlayer(currentRivalry?.visitorPlayer)?.image.let {
-            if (it != null) {
-                (findViewById<View>(R.id.round_image_visitor) as ImageView).setImageResource(
-                    it
-                )
+        playerViewModel.allPlayers.observe(owner = this) { players ->
+            for (player in players) {
+                playerImageMap[player.id] = player.image
             }
         }
-        Player.getPlayer(currentRivalry?.homePlayer)?.image.let {
-            if (it != null) {
-                (findViewById<View>(R.id.round_image_home) as ImageView).setImageResource(
-                    it
-                )
-            }
-        }
-    }
 
-    /**
-     * Set up game list view
-     */
-    private fun setGameListView() {
-        if (currentRivalry != null) {
-            if (currentRivalry!!.games.size > 0) {
-                val listView: ListView = findViewById<ListView>(R.id.listview_games)
-                val adapter = GameAdapter(
-                    this,
-                    ArrayList(currentRivalry!!.games.reversed())
-                )
-                listView.adapter = adapter
-                listView.onItemClickListener =
-                    AdapterView.OnItemClickListener { parent, view, position, id ->
-                        val selectedGameId = view.tag.toString().toInt()
-                        val intent = Intent(this, GameActivity::class.java).apply {
-                            putExtra(GAME, selectedGameId)
-                        }
-                        startActivity(intent)
+        rivalryViewModel.getRivalryWithGamesById(intent.getIntExtra(RIVALRY, -1))
+            .observe(owner = this) { rivalryWithGames ->
+                rivalryWithGames.let {
+                    currentRivalry = it.rivalry
+                    findViewById<TextView>(R.id.score_visitor).text =
+                        it.rivalry.visitorScore.toString()
+                    if (playerImageMap[it.rivalry.visitorPlayer] != null) {
+                        findViewById<ImageView>(R.id.round_image_visitor).setImageResource(
+                            playerImageMap[it.rivalry.visitorPlayer]!!
+                        )
                     }
+                    if (playerImageMap[it.rivalry.homePlayer] != null) {
+                        findViewById<ImageView>(R.id.round_image_home).setImageResource(
+                            playerImageMap[it.rivalry.homePlayer]!!
+                        )
+                    }
+                    findViewById<TextView>(R.id.score_home).text =
+                        it.rivalry.homeScore.toString()
+                    adapter.submitList(it.games)
+                }
             }
-        }
-    }
 
-    /**
-     * Set up new game button
-     */
-    private fun setAddGameButton() {
         (findViewById<View>(R.id.button_add_game) as ImageButton).setOnClickListener {
             if (currentRivalry != null) {
                 var id: Int?
@@ -129,5 +84,21 @@ class RivalryActivity : AppCompatActivity() {
                 startActivity(intent)
             }
         }
+    }
+
+    override fun onContentChanged() {
+        super.onContentChanged()
+        findViewById<ListView>(R.id.listview_games).emptyView =
+            findViewById(R.id.listview_games_empty_text)
+    }
+
+    /**
+     * Function passed to list adapter to set onClick behavior
+     */
+    private fun adapterOnClick(game: Game) {
+        val intent = Intent(this, GameActivity::class.java).apply {
+            putExtra(GAME, game.id)
+        }
+        startActivity(intent)
     }
 }

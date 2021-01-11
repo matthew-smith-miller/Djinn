@@ -6,7 +6,7 @@ import java.lang.IllegalArgumentException
 
 class PartialGameViewModel(private val repository: PartialGameRepository) : ViewModel() {
 
-    fun getPartialGamesFromGameId(gameId: Int): LiveData<List<PartialGame>> {
+    fun getPartialGamesFromGameId(gameId: Int?): LiveData<List<PartialGame>> {
         return repository.getPartialGamesFromGameId(gameId).asLiveData()
     }
 

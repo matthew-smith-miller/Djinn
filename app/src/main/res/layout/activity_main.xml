@@ -13,23 +13,15 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Recent"
+            android:text="@string/all_rivalries"
             style="@style/HeaderText"
             android:layout_margin="12dp"/>
-        <ListView
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:id="@+id/listview_recent"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="All"
-            style="@style/HeaderText"
-            android:layout_margin="12dp"/>
-        <ListView
+
+        <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/listview_all"/>
+            android:id="@+id/listview_all"
+            tools:listitem="@layout/list_item_rivalry" />
 
     </LinearLayout>
 

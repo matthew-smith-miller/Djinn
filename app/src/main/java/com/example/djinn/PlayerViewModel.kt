@@ -7,7 +7,6 @@ import java.lang.IllegalArgumentException
 class PlayerViewModel(private val repository: PlayerRepository) : ViewModel() {
 
     val allPlayers: LiveData<List<Player>> = repository.allPlayers.asLiveData()
-    val homePlayerId: LiveData<Int> = repository.homePlayerId.asLiveData()
 
     /**
      * Launching a new coroutine to insert the data in a non-blocking way

@@ -6,10 +6,13 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface PlayerDao {
     @Query("SELECT * FROM Player")
-    fun getAlphabetizedPlayers(): Flow<List<Player>>
+    fun getAllPlayers(): Flow<List<Player>>
 
-    @Query("SELECT id FROM Player WHERE isHomePlayer = true")
-    fun getHomePlayerId(): Flow<Int>
+    @Query("SELECT * FROM Player")
+    fun getAllPlayersAsList(): List<Player>
+
+    @Query("SELECT * FROM Player WHERE name = :name")
+    fun getPlayerFromName(name: String): Player
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertAll(vararg players: Player)
@@ -19,4 +22,7 @@ interface PlayerDao {
 
     @Delete
     suspend fun delete(player: Player)
+
+    @Query("DELETE FROM Player")
+    suspend fun deleteAll()
 }

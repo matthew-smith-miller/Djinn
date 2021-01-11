@@ -9,11 +9,14 @@ interface PartialGameDao {
     fun getAllPartialGames(): Flow<List<PartialGame>>
 
     @Query("SELECT * FROM PartialGame WHERE game = :gameId")
-    fun getPartialGamesFromGameId(gameId: Int): Flow<List<PartialGame>>
+    fun getPartialGamesFromGameId(gameId: Int?): Flow<List<PartialGame>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertAll(vararg partialGames: PartialGame)
 
     @Delete
     suspend fun delete(partialGame: PartialGame)
+
+    @Query("DELETE FROM PartialGame")
+    suspend fun deleteAll()
 }

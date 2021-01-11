@@ -5,8 +5,7 @@ import kotlinx.coroutines.flow.Flow
 
 class PlayerRepository(private val playerDao: PlayerDao) {
 
-    val allPlayers: Flow<List<Player>> = playerDao.getAlphabetizedPlayers()
-    val homePlayerId: Flow<Int> = playerDao.getHomePlayerId()
+    val allPlayers: Flow<List<Player>> = playerDao.getAllPlayers()
 
     @Suppress("RedundantSuspendModifier")
     @WorkerThread

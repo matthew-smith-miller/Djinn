@@ -23,8 +23,8 @@ data class Rivalry(
         val rivalries = arrayListOf<Rivalry>()
         val rivalryMap = hashMapOf<Int, Rivalry>()
 
-        fun makeRivalry(visitor: Int): Rivalry {
-            return Rivalry(0, visitor, HOME_PLAYER)
+        fun makeRivalry(visitorPlayer: Int, homePlayer: Int): Rivalry {
+            return Rivalry(0, visitorPlayer, HOME_PLAYER)
         }
 
         fun getRivalry(id: Int?): Rivalry? {

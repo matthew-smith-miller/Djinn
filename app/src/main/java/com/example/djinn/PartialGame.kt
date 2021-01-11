@@ -9,7 +9,6 @@ data class PartialGame(
     @PrimaryKey(autoGenerate = true) val id: Int,
     val game: Int,
     val player: Int,
-    val playerRole: String,
     val type: String,
     val note: String?,
     @ColumnInfo(name = "raw_score") val rawScore: Int,
@@ -34,10 +33,6 @@ data class PartialGame(
                 0,
                 game,
                 player,
-                when (player) {
-                    PlayerViewModel.homePlayerId -> "Home"
-                    else -> "Visitor"
-                },
                 type,
                 when (type) {
                     "Bonus" -> null
@@ -57,7 +52,6 @@ data class PartialGame(
                 0,
                 game,
                 player,
-                when ()
                 "Bonus",
                 note,
                 rawScore

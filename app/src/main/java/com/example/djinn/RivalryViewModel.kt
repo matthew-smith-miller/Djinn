@@ -1,5 +1,6 @@
 package com.example.djinn
 
+import android.util.Log
 import androidx.lifecycle.*
 import kotlinx.coroutines.launch
 import java.lang.IllegalArgumentException
@@ -7,6 +8,10 @@ import java.lang.IllegalArgumentException
 class RivalryViewModel(private val repository: RivalryRepository) : ViewModel() {
 
     val allRivalries: LiveData<List<Rivalry>> = repository.allRivalries.asLiveData()
+
+    fun getRivalryWithGamesById(id: Int): LiveData<DataClasses.RivalryWithGames> {
+        return repository.getRivalryWithGamesById(id).asLiveData()
+    }
 
     /**
      * Launching a new coroutine to insert the data in a non-blocking way

@@ -16,6 +16,9 @@ class PartialGameListAdapter :
     androidx.recyclerview.widget.ListAdapter<PartialGame, PartialGameListAdapter.PartialGameViewHolder>(
         PartialGamesComparator()
     ) {
+
+    private val homePlayerId = 0
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PartialGameViewHolder {
         return PartialGameViewHolder.create(parent)
     }
@@ -27,7 +30,10 @@ class PartialGameListAdapter :
             current.totalScore.toString(),
             current.note,
             current.id,
-            current.playerRole
+            when (current.player) {
+                homePlayerId -> "Home"
+                else -> "Visitor"
+            }
         )
     }
 
