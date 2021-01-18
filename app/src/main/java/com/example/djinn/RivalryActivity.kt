@@ -1,9 +1,7 @@
 package com.example.djinn
 
 import android.content.Intent
-import android.media.Image
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.activity.viewModels
@@ -11,15 +9,17 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import java.util.*
 
 class RivalryActivity : AppCompatActivity() {
     private var currentRivalry: Rivalry? = null
+    private var games: List<Game> = ArrayList()
     private val rivalryViewModel: RivalryViewModel by viewModels {
         RivalryViewModelFactory((application as DjinnApplication).rivalryRepository)
     }
-    private val playerViewModel: PlayerViewModel by viewModels {
-        PlayerViewModelFactory((application as DjinnApplication).playerRepository)
+    private val gameViewModel: GameViewModel by viewModels {
+        GameViewModelFactory(
+            (application as DjinnApplication).gameRepository
+        )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,44 +31,35 @@ class RivalryActivity : AppCompatActivity() {
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-        val playerImageMap: TreeMap<Int, Int> = TreeMap()
-
-        playerViewModel.allPlayers.observe(owner = this) { players ->
-            for (player in players) {
-                playerImageMap[player.id] = player.image
-            }
-        }
+        val visitorImageId = intent.getIntExtra(VISITOR_IMAGE, -1)
+        val homeImageId = intent.getIntExtra(HOME_IMAGE, -1)
 
         rivalryViewModel.getRivalryWithGamesById(intent.getIntExtra(RIVALRY, -1))
             .observe(owner = this) { rivalryWithGames ->
                 rivalryWithGames.let {
                     currentRivalry = it.rivalry
+                    games = it.games
                     findViewById<TextView>(R.id.score_visitor).text =
                         it.rivalry.visitorScore.toString()
-                    if (playerImageMap[it.rivalry.visitorPlayer] != null) {
-                        findViewById<ImageView>(R.id.round_image_visitor).setImageResource(
-                            playerImageMap[it.rivalry.visitorPlayer]!!
-                        )
-                    }
-                    if (playerImageMap[it.rivalry.homePlayer] != null) {
-                        findViewById<ImageView>(R.id.round_image_home).setImageResource(
-                            playerImageMap[it.rivalry.homePlayer]!!
-                        )
-                    }
+                    findViewById<ImageView>(R.id.round_image_visitor).setImageResource(
+                        visitorImageId
+                    )
+                    findViewById<ImageView>(R.id.round_image_home).setImageResource(
+                        homeImageId
+                    )
                     findViewById<TextView>(R.id.score_home).text =
                         it.rivalry.homeScore.toString()
-                    adapter.submitList(it.games)
+                    adapter.submitList(games)
                 }
             }
 
         (findViewById<View>(R.id.button_add_game) as ImageButton).setOnClickListener {
             if (currentRivalry != null) {
                 var id: Int?
-                if (currentRivalry!!.games.size > 0) {
-                    if (currentRivalry!!.games.reversed()[0].status != "Active") {
-                        id = Game.makeGame(currentRivalry!!.id).id
+                if (games.isNotEmpty()) {
+                    if (games.reversed()[0].status != "Active") {
+                        gameViewModel.insert(Game.makeGame(games.size + 1, currentRivalry!!.id))
                     } else {
-                        id = currentRivalry!!.games.reversed()[0].id
                         Toast.makeText(
                             this,
                             "An active game already exists",
@@ -76,10 +67,14 @@ class RivalryActivity : AppCompatActivity() {
                         ).show()
                     }
                 } else {
-                    id = Game.makeGame(currentRivalry!!.id).id
+                    gameViewModel.insert(Game.makeGame(1, currentRivalry!!.id))
                 }
                 val intent = Intent(this, GameActivity::class.java).apply {
-                    putExtra(GAME, id)
+                    putExtra(GAME, currentRivalry!!.games.reversed()[0].id)
+                    putExtra(VISITOR_PLAYER_ID, currentRivalry?.visitorPlayer)
+                    putExtra(HOME_PLAYER_ID, currentRivalry?.homePlayer)
+                    putExtra(VISITOR_IMAGE, visitorImageId)
+                    putExtra(HOME_IMAGE, homeImageId)
                 }
                 startActivity(intent)
             }
@@ -98,6 +93,8 @@ class RivalryActivity : AppCompatActivity() {
     private fun adapterOnClick(game: Game) {
         val intent = Intent(this, GameActivity::class.java).apply {
             putExtra(GAME, game.id)
+            putExtra(HOME_PLAYER_ID, currentRivalry?.homePlayer)
+            putExtra(VISITOR_PLAYER_ID, currentRivalry?.visitorPlayer)
         }
         startActivity(intent)
     }

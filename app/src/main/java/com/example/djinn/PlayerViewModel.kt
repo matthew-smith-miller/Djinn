@@ -8,6 +8,14 @@ class PlayerViewModel(private val repository: PlayerRepository) : ViewModel() {
 
     val allPlayers: LiveData<List<Player>> = repository.allPlayers.asLiveData()
 
+    fun getPlayerByName(name: String): LiveData<Player> {
+        return repository.getPlayerByName(name).asLiveData()
+    }
+
+    fun getPlayerIdsAndNames(ids: List<Int>): LiveData<List<DataClasses.IdNameTuple>> {
+        return repository.getPlayerIdsAndNames(ids).asLiveData()
+    }
+
     /**
      * Launching a new coroutine to insert the data in a non-blocking way
      */

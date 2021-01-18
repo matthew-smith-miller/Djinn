@@ -4,26 +4,31 @@ import androidx.lifecycle.*
 import kotlinx.coroutines.launch
 import java.lang.IllegalArgumentException
 
-class GameViewModel(private val repository: GameRepository) : ViewModel() {
+class GameViewModel(private val gameRepository: GameRepository) : ViewModel() {
 
-    fun getGamesFromRivalryId(rivalryId: Int): LiveData<List<Game>> {
-        return repository.getGamesFromRivalryId(rivalryId).asLiveData()
+    fun getAllGames(): LiveData<List<Game>> {
+        return gameRepository.getAllGames().asLiveData()
     }
 
-    /**
-     * Launching a new coroutine to insert the data in a non-blocking way
-     */
+    fun getGameWithPartialGamesById(gameId: Int): LiveData<DataClasses.GameWithPartialGames> {
+        return gameRepository.getGameWithPartialGamesById(gameId).asLiveData()
+    }
+
     fun insert(game: Game) = viewModelScope.launch {
-        repository.insert(game)
+        gameRepository.insert(game)
+    }
+
+    fun update(game: Game) = viewModelScope.launch {
+        gameRepository.update(game)
     }
 }
 
-class GameViewModelFactory(private val repository: GameRepository) :
+class GameViewModelFactory(private val gameRepository: GameRepository) :
     ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(GameViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return GameViewModel(repository) as T
+            return GameViewModel(gameRepository) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

@@ -3,24 +3,26 @@ package com.example.djinn
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
-import android.content.DialogInterface
 import android.os.Bundle
 import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.Spinner
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.observe
 import java.lang.ClassCastException
 import java.lang.IllegalStateException
 
 class PartialGameDialogFragment : DialogFragment() {
     internal lateinit var listener: PartialGameDialogListener
 
+    private val playerViewModel = ViewModelProvider(this).get(PlayerViewModel::class.java)
+
     interface PartialGameDialogListener {
         fun onDialogPositiveClick(
             dialog: DialogFragment,
             player: Int,
-            playerRole: String,
             type: String,
             rawScore: Int
         )
@@ -40,20 +42,26 @@ class PartialGameDialogFragment : DialogFragment() {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val playerNames = arguments?.getStringArray("playerNames")
-        val playerIds = arguments?.getIntegerArrayList("playerIds")
-        return activity?.let {
-            val builder = AlertDialog.Builder(it)
-            val inflater = requireActivity().layoutInflater;
+        val playerIds = arguments?.getIntegerArrayList(PLAYER_IDS)
+        var playerIdsAndNames: List<DataClasses.IdNameTuple>? = null
+        if (playerIds != null) {
+            playerViewModel.getPlayerIdsAndNames(playerIds).observe(owner = this) { returnedList ->
+                playerIdsAndNames = returnedList
+            }
+        }
+        return activity?.let { fragmentActivity ->
+            val builder = AlertDialog.Builder(fragmentActivity)
+            val inflater = fragmentActivity.layoutInflater;
             val dialogView = inflater.inflate(R.layout.dialog_partial_game, null)
             val spinnerPlayers: Spinner? = dialogView.findViewById(R.id.spinner_players)
             val spinnerTypes: Spinner? = dialogView.findViewById(R.id.spinner_partial_game_types)
-            if (playerNames != null) {
+
+            if (playerIdsAndNames != null) {
                 context?.let { el ->
                     ArrayAdapter(
                         el,
                         android.R.layout.simple_spinner_item,
-                        playerNames
+                        playerIdsAndNames!!
                     ).also { adapter ->
                         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
                         spinnerPlayers?.adapter = adapter
@@ -80,25 +88,15 @@ class PartialGameDialogFragment : DialogFragment() {
                             R.id.edit_text_raw_score
                         ).text.toString() != ""
                     ) {
-                        if (playerIds != null &&
-                            playerNames != null &&
-                            playerIds.size == playerNames.size &&
-                            spinnerPlayers != null
-                        ) {
-                            listener.onDialogPositiveClick(
-                                this@PartialGameDialogFragment,
-                                playerIds[spinnerPlayers.selectedItemPosition],
-                                when (spinnerPlayers.selectedItemPosition) {
-                                    0 -> "Home"
-                                    else -> "Visitor"
-                                },
-                                spinnerTypes?.selectedItem.toString(),
-                                dialogView.findViewById<EditText>(
-                                    R.id.edit_text_raw_score
-                                ).text.toString().toInt()
-                            )
-                            dialog.dismiss()
-                        }
+                        listener.onDialogPositiveClick(
+                            this@PartialGameDialogFragment,
+                            (spinnerPlayers?.selectedItem as DataClasses.IdNameTuple).id,
+                            spinnerTypes?.selectedItem.toString(),
+                            dialogView.findViewById<EditText>(
+                                R.id.edit_text_raw_score
+                            ).text.toString().toInt()
+                        )
+                        dialog.dismiss()
                     } else {
                         Toast.makeText(
                             context,

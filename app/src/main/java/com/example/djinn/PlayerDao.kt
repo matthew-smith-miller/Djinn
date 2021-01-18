@@ -12,7 +12,13 @@ interface PlayerDao {
     fun getAllPlayersAsList(): List<Player>
 
     @Query("SELECT * FROM Player WHERE name = :name")
-    fun getPlayerFromName(name: String): Player
+    fun getPlayerByName(name: String): Flow<Player>
+
+    @Query("SELECT * FROM Player WHERE name = :name")
+    fun getPlayerByNameAsPlayer(name: String): Player
+
+    @Query("SELECT id, name FROM Player WHERE id IN (:ids)")
+    fun getPlayerIdAndNames(ids: List<Int>): Flow<List<DataClasses.IdNameTuple>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertAll(vararg players: Player)

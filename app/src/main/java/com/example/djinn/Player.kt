@@ -18,9 +18,6 @@ data class Player(
 ) {
 
     companion object PlayerManager {
-        val players = arrayListOf<Player>()
-        val playerMap = hashMapOf<Int, Player>()
-
         fun makePlayer(name: String, image: Int, isHomePlayer: Boolean): Player {
             val names = name.split(" ")
             return Player(
@@ -37,17 +34,5 @@ data class Player(
                 isHomePlayer
             )
         }
-
-        fun getPlayer(id: Int?): Player? {
-            return when (id) {
-                null -> null
-                else -> playerMap[id]
-            }
-        }
-    }
-
-    init {
-        playerMap[id] = this
-        players.add(this)
     }
 }

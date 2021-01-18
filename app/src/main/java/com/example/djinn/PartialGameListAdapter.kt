@@ -12,12 +12,10 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import java.util.*
 
-class PartialGameListAdapter :
+class PartialGameListAdapter(val homePlayerId: Int) :
     androidx.recyclerview.widget.ListAdapter<PartialGame, PartialGameListAdapter.PartialGameViewHolder>(
         PartialGamesComparator()
     ) {
-
-    private val homePlayerId = 0
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PartialGameViewHolder {
         return PartialGameViewHolder.create(parent)

@@ -20,28 +20,8 @@ data class Rivalry(
     val games = arrayListOf<Game>()
 
     companion object RivalryManager {
-        val rivalries = arrayListOf<Rivalry>()
-        val rivalryMap = hashMapOf<Int, Rivalry>()
-
         fun makeRivalry(visitorPlayer: Int, homePlayer: Int): Rivalry {
-            return Rivalry(0, visitorPlayer, HOME_PLAYER)
+            return Rivalry(0, visitorPlayer, homePlayer)
         }
-
-        fun getRivalry(id: Int?): Rivalry? {
-            return when (id) {
-                null -> null
-                else -> rivalryMap[id]
-            }
-        }
-    }
-
-    init {
-        rivalries.add(this)
-        rivalryMap[id] = this
-    }
-
-    fun incrementScore(visitorIncrement: Int, homeIncrement: Int) {
-        visitorScore += visitorIncrement
-        homeScore += homeIncrement
     }
 }

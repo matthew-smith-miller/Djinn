@@ -19,10 +19,7 @@ data class PartialGame(
     }
 ) {
 
-
     companion object PartialGameManager {
-        val partialGameMap = hashMapOf<Int, PartialGame>()
-
         fun makePartialGame(
             game: Int,
             player: Int,
@@ -57,11 +54,5 @@ data class PartialGame(
                 rawScore
             )
         }
-    }
-
-    init {
-        Game.getGame(game)?.partialGames?.add(this)
-        partialGameMap[id] = this
-        Game.getGame(game)?.incrementScore(totalScore, player)
     }
 }

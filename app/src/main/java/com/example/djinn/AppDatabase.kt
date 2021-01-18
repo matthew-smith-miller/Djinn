@@ -39,7 +39,7 @@ abstract class AppDatabase : RoomDatabase() {
 
         override fun onOpen(db: SupportSQLiteDatabase) {
             super.onOpen(db)
-            INSTANCE?.let { database ->
+            /*INSTANCE?.let { database ->
                 scope.launch {
                     populateDatabase(
                         database.playerDao(),
@@ -48,7 +48,7 @@ abstract class AppDatabase : RoomDatabase() {
                         database.partialGameDao()
                     )
                 }
-            }
+            }*/
         }
 
         suspend fun populateDatabase(
@@ -68,10 +68,10 @@ abstract class AppDatabase : RoomDatabase() {
             var barack = Player.makePlayer("Barack Obama", R.drawable.barack, false)
             playerDao.insertAll(matt, neil, scott, barack)
 
-            matt = playerDao.getPlayerFromName("Matt Miller")
-            neil = playerDao.getPlayerFromName("Neil Katuna")
-            scott = playerDao.getPlayerFromName("Scott Liftman")
-            barack = playerDao.getPlayerFromName("Barack Obama")
+            matt = playerDao.getPlayerByNameAsPlayer("Matt Miller")
+            neil = playerDao.getPlayerByNameAsPlayer("Neil Katuna")
+            scott = playerDao.getPlayerByNameAsPlayer("Scott Liftman")
+            barack = playerDao.getPlayerByNameAsPlayer("Barack Obama")
 
             val neilRivalry = Rivalry.makeRivalry(neil.id, matt.id)
             var scottRivalry = Rivalry.makeRivalry(scott.id, matt.id)
@@ -80,62 +80,11 @@ abstract class AppDatabase : RoomDatabase() {
 
             scottRivalry = rivalryDao.getRivalryFromPlayerIds(scott.id, matt.id)
 
-            for (Int in 1..8) {
-                gameDao.insertAll(Game.makeGame(scottRivalry.id))
+            for (gameNumber in 1..8) {
+                gameDao.insertAll(Game.makeGame(gameNumber, scottRivalry.id))
             }
 
             val scottGames = gameDao.getGamesFromRivalryIdAsList(scottRivalry.id)
-
-            partialGameDao.insertAll(
-                PartialGame.makePartialGame(scottGames[0].id, scott.id, "Knock", 6),
-                PartialGame.makePartialGame(scottGames[0].id, scott.id, "Knock", 39),
-                PartialGame.makePartialGame(scottGames[0].id, scott.id, "Knock", 29),
-                PartialGame.makePartialGame(scottGames[0].id, scott.id, "Knock", 8),
-                PartialGame.makePartialGame(scottGames[0].id, scott.id, "Knock", 9),
-                PartialGame.makePartialGame(scottGames[0].id, matt.id, "Knock", 62),
-                PartialGame.makePartialGame(scottGames[0].id, matt.id, "Knock", 10),
-                PartialGame.makePartialGame(scottGames[0].id, matt.id, "Knock", 22),
-                PartialGame.makePartialGame(scottGames[0].id, matt.id, "Knock", 5),
-                PartialGame.makePartialGame(scottGames[0].id, scott.id, "Knock", 28),
-                PartialGame.makePartialGame(scottGames[1].id, matt.id, "Knock", 57),
-                PartialGame.makePartialGame(scottGames[1].id, matt.id, "Knock", 24),
-                PartialGame.makePartialGame(scottGames[1].id, matt.id, "Knock", 9),
-                PartialGame.makePartialGame(scottGames[1].id, matt.id, "Knock", 33),
-                PartialGame.makePartialGame(scottGames[2].id, matt.id, "Gin", 60),
-                PartialGame.makePartialGame(scottGames[2].id, scott.id, "Knock", 44),
-                PartialGame.makePartialGame(scottGames[2].id, matt.id, "Knock", 27),
-                PartialGame.makePartialGame(scottGames[3].id, matt.id, "Undercut", 2),
-                PartialGame.makePartialGame(scottGames[3].id, matt.id, "Knock", 40),
-                PartialGame.makePartialGame(scottGames[3].id, matt.id, "Knock", 13),
-                PartialGame.makePartialGame(scottGames[3].id, scott.id, "Knock", 5),
-                PartialGame.makePartialGame(scottGames[3].id, scott.id, "Gin", 24),
-                PartialGame.makePartialGame(scottGames[3].id, matt.id, "Knock", 13),
-                PartialGame.makePartialGame(scottGames[3].id, matt.id, "Knock", 20),
-                PartialGame.makePartialGame(scottGames[3].id, scott.id, "Knock", 12),
-                PartialGame.makePartialGame(scottGames[3].id, scott.id, "Knock", 28),
-                PartialGame.makePartialGame(scottGames[3].id, matt.id, "Knock", 14),
-                PartialGame.makePartialGame(scottGames[4].id, scott.id, "Knock", 24),
-                PartialGame.makePartialGame(scottGames[4].id, matt.id, "Knock", 14),
-                PartialGame.makePartialGame(scottGames[4].id, matt.id, "Knock", 11),
-                PartialGame.makePartialGame(scottGames[4].id, matt.id, "Knock", 58),
-                PartialGame.makePartialGame(scottGames[4].id, matt.id, "Knock", 41),
-                PartialGame.makePartialGame(scottGames[5].id, scott.id, "Knock", 30),
-                PartialGame.makePartialGame(scottGames[5].id, scott.id, "Knock", 41),
-                PartialGame.makePartialGame(scottGames[5].id, matt.id, "Knock", 17),
-                PartialGame.makePartialGame(scottGames[5].id, scott.id, "Knock", 19),
-                PartialGame.makePartialGame(scottGames[5].id, scott.id, "Knock", 12),
-                PartialGame.makePartialGame(scottGames[6].id, matt.id, "Knock", 34),
-                PartialGame.makePartialGame(scottGames[6].id, scott.id, "Knock", 17),
-                PartialGame.makePartialGame(scottGames[6].id, scott.id, "Undercut", 0),
-                PartialGame.makePartialGame(scottGames[6].id, matt.id, "Gin", 40),
-                PartialGame.makePartialGame(scottGames[6].id, scott.id, "Knock", 7),
-                PartialGame.makePartialGame(scottGames[6].id, matt.id, "Knock", 42),
-                PartialGame.makePartialGame(scottGames[7].id, scott.id, "Knock", 18),
-                PartialGame.makePartialGame(scottGames[7].id, scott.id, "Knock", 23),
-                PartialGame.makePartialGame(scottGames[7].id, scott.id, "Undercut", 3),
-                PartialGame.makePartialGame(scottGames[7].id, scott.id, "Knock", 45),
-                PartialGame.makePartialGame(scottGames[7].id, scott.id, "Knock", 10)
-            )
         }
     }
 
