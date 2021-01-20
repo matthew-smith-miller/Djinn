@@ -17,9 +17,6 @@ class MainActivity : AppCompatActivity() {
     private val playerViewModel: PlayerViewModel by viewModels {
         PlayerViewModelFactory((application as DjinnApplication).playerRepository)
     }
-    private val gameViewModel: GameViewModel by viewModels {
-        GameViewModelFactory((application as DjinnApplication).gameRepository)
-    }
     private val partialGameViewModel: PartialGameViewModel by viewModels {
         PartialGameViewModelFactory((application as DjinnApplication).partialGameRepository)
     }
@@ -46,7 +43,7 @@ class MainActivity : AppCompatActivity() {
             }
 
         //Temp block to insert Partial Games
-        /*partialGameViewModel.insert(PartialGame.makePartialGame(57, 35, "Knock", 6))
+        partialGameViewModel.insert(PartialGame.makePartialGame(57, 35, "Knock", 6))
         partialGameViewModel.insert(PartialGame.makePartialGame(57, 35, "Knock", 39))
         partialGameViewModel.insert(PartialGame.makePartialGame(57, 35, "Knock", 29))
         partialGameViewModel.insert(PartialGame.makePartialGame(57, 35, "Knock", 8))
@@ -56,7 +53,7 @@ class MainActivity : AppCompatActivity() {
         partialGameViewModel.insert(PartialGame.makePartialGame(57, 33, "Knock", 22))
         partialGameViewModel.insert(PartialGame.makePartialGame(57, 33, "Knock", 5))
         partialGameViewModel.insert(PartialGame.makePartialGame(57, 35, "Knock", 28))
-        partialGameViewModel.insert(PartialGame.makePartialGame(58, 33, "Knock", 57))
+        /*partialGameViewModel.insert(PartialGame.makePartialGame(58, 33, "Knock", 57))
         partialGameViewModel.insert(PartialGame.makePartialGame(58, 33, "Knock", 24))
         partialGameViewModel.insert(PartialGame.makePartialGame(58, 33, "Knock", 9))
         partialGameViewModel.insert(PartialGame.makePartialGame(58, 33, "Knock", 33))

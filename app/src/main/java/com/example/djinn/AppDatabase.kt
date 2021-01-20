@@ -41,6 +41,11 @@ abstract class AppDatabase : RoomDatabase() {
             super.onOpen(db)
             /*INSTANCE?.let { database ->
                 scope.launch {
+                    database.partialGameDao().deleteAll()
+                }
+            }*/
+            /*INSTANCE?.let { database ->
+                scope.launch {
                     populateDatabase(
                         database.playerDao(),
                         database.rivalryDao(),

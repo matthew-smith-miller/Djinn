@@ -3,6 +3,7 @@ package com.example.djinn
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class RivalryRepository(private val rivalryDao: RivalryDao) {
@@ -12,17 +13,18 @@ class RivalryRepository(private val rivalryDao: RivalryDao) {
         return rivalryDao.getRivalryWithGamesById(id)
     }
 
-    fun getRivalryById(id: Int): Rivalry {
+    fun getRivalryById(id: Int): Flow<Rivalry> {
         return rivalryDao.getRivalryById(id)
     }
 
     @Suppress("RedundantSuspendModifier")
     @WorkerThread
     suspend fun incrementScore(game: Game) {
-        val rivalry = getRivalryById(game.rivalry)
-        rivalry.visitorScore += game.visitorScore
-        rivalry.homeScore += game.homeScore
-        update(rivalry)
+        getRivalryById(game.rivalry).collect { rivalry ->
+            rivalry.visitorScore += game.visitorScore
+            rivalry.homeScore += game.homeScore
+            update(rivalry)
+        }
     }
 
     @Suppress("RedundantSuspendModifier")

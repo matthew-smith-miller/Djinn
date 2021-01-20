@@ -1,6 +1,7 @@
 package com.example.djinn
 
 import androidx.lifecycle.*
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import java.lang.IllegalArgumentException
 
@@ -8,7 +9,7 @@ class RivalryViewModel(private val repository: RivalryRepository) : ViewModel() 
 
     val allRivalries: LiveData<List<Rivalry>> = repository.allRivalries.asLiveData()
 
-    fun getRivalryById(id: Int): Rivalry {
+    fun getRivalryById(id: Int): Flow<Rivalry> {
         return repository.getRivalryById(id)
     }
 

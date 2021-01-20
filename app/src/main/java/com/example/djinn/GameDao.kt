@@ -25,7 +25,7 @@ interface GameDao {
     fun getGameById(id: Int): Game
 
     @Query("SELECT id, visitor_player, home_player FROM Rivalry WHERE id = :rivalryId")
-    fun getRivalryPlayerIds(rivalryId: Int): DataClasses.RivalryPlayerIdTuple
+    fun getRivalryPlayerIds(rivalryId: Int): Flow<DataClasses.RivalryPlayerIdTuple>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertAll(vararg games: Game)

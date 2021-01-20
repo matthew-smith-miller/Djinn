@@ -12,7 +12,7 @@ interface RivalryDao {
     fun getRivalryFromPlayerIds(visitorPlayer: Int, homePlayer: Int): Rivalry
 
     @Query("SELECT * FROM Rivalry WHERE id = :id")
-    fun getRivalryById(id: Int): Rivalry
+    fun getRivalryById(id: Int): Flow<Rivalry>
 
     @Transaction
     @Query("SELECT * FROM Rivalry WHERE id = :id")
