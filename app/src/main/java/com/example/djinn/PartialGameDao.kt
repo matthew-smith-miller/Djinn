@@ -12,7 +12,10 @@ interface PartialGameDao {
     fun getPartialGamesFromGameId(gameId: Int?): Flow<List<PartialGame>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insertAll(vararg partialGames: PartialGame)
+    suspend fun insert(vararg partialGames: PartialGame)
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insert(partialGames: List<PartialGame>): List<Long>
 
     @Delete
     suspend fun delete(partialGame: PartialGame)

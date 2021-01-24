@@ -9,8 +9,8 @@ class PartialGameViewModel(private val partialGameRepository: PartialGameReposit
     /**
      * Launching a new coroutine to insert the data in a non-blocking way
      */
-    fun insert(partialGame: PartialGame) = viewModelScope.launch {
-        partialGameRepository.insert(partialGame)
+    fun insert(partialGames: List<PartialGame>) = viewModelScope.launch {
+        partialGameRepository.insert(partialGames)
     }
 }
 

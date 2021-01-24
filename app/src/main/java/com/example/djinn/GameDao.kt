@@ -18,6 +18,9 @@ interface GameDao {
     @Query("SELECT * FROM Game WHERE id = :id")
     fun getGameWithPartialGamesById(id: Int): Flow<DataClasses.GameWithPartialGames>
 
+    @Query("SELECT * FROM Game WHERE id IN (:ids)")
+    fun getGameWithPartialGamesById(ids: Set<Int>): Flow<List<DataClasses.GameWithPartialGames>>
+
     @Query("SELECT * FROM Game WHERE rivalry = :rivalryId")
     fun getGamesFromRivalryIdAsList(rivalryId: Int): List<Game>
 
@@ -31,7 +34,10 @@ interface GameDao {
     suspend fun insertAll(vararg games: Game)
 
     @Update
-    suspend fun updateAll(vararg games: Game)
+    suspend fun update(vararg games: Game)
+
+    @Update
+    suspend fun update(games: List<Game>)
 
     @Delete
     suspend fun delete(game: Game)

@@ -1,10 +1,8 @@
 package com.example.djinn
 
 import androidx.annotation.WorkerThread
-import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
 
 class RivalryRepository(private val rivalryDao: RivalryDao) {
 
@@ -29,6 +27,28 @@ class RivalryRepository(private val rivalryDao: RivalryDao) {
 
     @Suppress("RedundantSuspendModifier")
     @WorkerThread
+    suspend fun rollupScore(rivalryIds: Set<Int>) {
+        val rivalriesToUpdate = mutableListOf<Rivalry>()
+        rivalryDao.getRivalryWithGamesById(rivalryIds).collect { rivalriesWithGames ->
+            for (rivalryWithGames in rivalriesWithGames) {
+                var visitorScore = 0
+                var homeScore = 0
+                for (game in rivalryWithGames.games) {
+                    if (game.status == "Completed") {
+                        visitorScore += game.visitorScore
+                        homeScore += game.homeScore
+                    }
+                }
+                rivalryWithGames.rivalry.visitorScore = visitorScore
+                rivalryWithGames.rivalry.homeScore = homeScore
+                rivalriesToUpdate.add(rivalryWithGames.rivalry)
+            }
+            rivalryDao.update(rivalriesToUpdate)
+        }
+    }
+
+    @Suppress("RedundantSuspendModifier")
+    @WorkerThread
     suspend fun insert(rivalry: Rivalry) {
         rivalryDao.insertAll(rivalry)
     }
@@ -36,6 +56,6 @@ class RivalryRepository(private val rivalryDao: RivalryDao) {
     @Suppress("RedundantSuspendModifier")
     @WorkerThread
     suspend fun update(rivalry: Rivalry) {
-        rivalryDao.updateAll(rivalry)
+        rivalryDao.update(rivalry)
     }
 }

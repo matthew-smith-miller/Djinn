@@ -1,17 +1,23 @@
 package com.example.djinn
 
 import androidx.annotation.WorkerThread
-import kotlinx.coroutines.flow.Flow
 
 class PartialGameRepository(
     private val partialGameDao: PartialGameDao,
     private val gameRepository: GameRepository
 ) {
 
-    @Suppress("RedundantSuspendModifier")
+    /*@Suppress("RedundantSuspendModifier")
     @WorkerThread
     suspend fun insert(partialGame: PartialGame) {
-        partialGameDao.insertAll(partialGame)
+        partialGameDao.insert(partialGame)
         gameRepository.incrementScore(partialGame)
+    }*/
+
+    @Suppress("RedundantSuspendModifier")
+    @WorkerThread
+    suspend fun insert(partialGames: List<PartialGame>) {
+        partialGameDao.insert(partialGames)
+        gameRepository.rollupScore(partialGames)
     }
 }

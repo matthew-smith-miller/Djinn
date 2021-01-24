@@ -43,16 +43,23 @@ class MainActivity : AppCompatActivity() {
             }
 
         //Temp block to insert Partial Games
-        partialGameViewModel.insert(PartialGame.makePartialGame(57, 35, "Knock", 6))
-        partialGameViewModel.insert(PartialGame.makePartialGame(57, 35, "Knock", 39))
-        partialGameViewModel.insert(PartialGame.makePartialGame(57, 35, "Knock", 29))
-        partialGameViewModel.insert(PartialGame.makePartialGame(57, 35, "Knock", 8))
-        partialGameViewModel.insert(PartialGame.makePartialGame(57, 35, "Knock", 9))
-        partialGameViewModel.insert(PartialGame.makePartialGame(57, 33, "Knock", 62))
-        partialGameViewModel.insert(PartialGame.makePartialGame(57, 33, "Knock", 10))
-        partialGameViewModel.insert(PartialGame.makePartialGame(57, 33, "Knock", 22))
-        partialGameViewModel.insert(PartialGame.makePartialGame(57, 33, "Knock", 5))
-        partialGameViewModel.insert(PartialGame.makePartialGame(57, 35, "Knock", 28))
+        val controller = 1
+        if (controller == 1) {
+            partialGameViewModel.insert(
+                listOf(
+                    PartialGame.makePartialGame(57, 35, "Knock", 6),
+                    PartialGame.makePartialGame(57, 35, "Knock", 39),
+                    PartialGame.makePartialGame(57, 35, "Knock", 29),
+                    PartialGame.makePartialGame(57, 35, "Knock", 8),
+                    PartialGame.makePartialGame(57, 35, "Knock", 9),
+                    PartialGame.makePartialGame(57, 33, "Knock", 62),
+                    PartialGame.makePartialGame(57, 33, "Knock", 10),
+                    PartialGame.makePartialGame(57, 33, "Knock", 22),
+                    PartialGame.makePartialGame(57, 33, "Knock", 5),
+                    PartialGame.makePartialGame(57, 35, "Knock", 28)
+                )
+            )
+        }
         /*partialGameViewModel.insert(PartialGame.makePartialGame(58, 33, "Knock", 57))
         partialGameViewModel.insert(PartialGame.makePartialGame(58, 33, "Knock", 24))
         partialGameViewModel.insert(PartialGame.makePartialGame(58, 33, "Knock", 9))

@@ -9,7 +9,13 @@ class DjinnApplication : Application() {
     val database by lazy { AppDatabase.getDatabase(this, applicationScope) }
     val playerRepository by lazy { PlayerRepository(database.playerDao()) }
     val rivalryRepository by lazy { RivalryRepository(database.rivalryDao()) }
-    val gameRepository by lazy { GameRepository(database.gameDao(), rivalryRepository) }
+    val gameRepository by lazy {
+        GameRepository(
+            database.gameDao(),
+            rivalryRepository,
+            database.partialGameDao()
+        )
+    }
     val partialGameRepository by lazy {
         PartialGameRepository(
             database.partialGameDao(),

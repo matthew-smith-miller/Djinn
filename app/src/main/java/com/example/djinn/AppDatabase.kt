@@ -88,8 +88,6 @@ abstract class AppDatabase : RoomDatabase() {
             for (gameNumber in 1..8) {
                 gameDao.insertAll(Game.makeGame(gameNumber, scottRivalry.id))
             }
-
-            val scottGames = gameDao.getGamesFromRivalryIdAsList(scottRivalry.id)
         }
     }
 

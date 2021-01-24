@@ -98,7 +98,7 @@ class GameActivity : FragmentActivity(),
                 type,
                 rawScore
             )
-            partialGameViewModel.insert(partialGame)
+            partialGameViewModel.insert(listOf(partialGame))
         }
     }
 
