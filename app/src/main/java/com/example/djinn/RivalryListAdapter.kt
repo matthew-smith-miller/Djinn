@@ -30,23 +30,18 @@ class RivalryListAdapter(
             playerImageMap[current.homePlayer],
             current.homeScore
         )
+        holder.view.setOnClickListener {
+            onClick(current)
+        }
     }
 
-    class RivalryViewHolder(itemView: View, val onClick: (Rivalry) -> Unit) :
+    class RivalryViewHolder(itemView: View) :
         RecyclerView.ViewHolder(itemView) {
         private val visitorScoreTextView = itemView.findViewById<TextView>(R.id.score_visitor)
         private val visitorImageView = itemView.findViewById<ImageView>(R.id.round_image_visitor)
         private val homeImageView = itemView.findViewById<ImageView>(R.id.round_image_home)
         private val homeScoreTextView = itemView.findViewById<TextView>(R.id.score_home)
-        private var currentRivalry: Rivalry? = null
-
-        init {
-            itemView.setOnClickListener {
-                currentRivalry?.let {
-                    onClick(it)
-                }
-            }
-        }
+        val view = itemView
 
         fun bind(id: Int, visitorScore: Int, visitorImage: Int?, homeImage: Int?, homeScore: Int) {
             visitorScoreTextView.text = visitorScore.toString()
@@ -64,7 +59,7 @@ class RivalryListAdapter(
             fun create(parent: ViewGroup, onClick: (Rivalry) -> Unit): RivalryViewHolder {
                 val view: View = LayoutInflater.from(parent.context)
                     .inflate(R.layout.list_item_rivalry, parent, false)
-                return RivalryViewHolder(view, onClick)
+                return RivalryViewHolder(view)
             }
         }
     }

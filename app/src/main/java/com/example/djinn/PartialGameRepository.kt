@@ -1,10 +1,7 @@
 package com.example.djinn
 
-import androidx.annotation.WorkerThread
-
 class PartialGameRepository(
-    private val partialGameDao: PartialGameDao,
-    private val gameRepository: GameRepository
+    private val partialGameDao: PartialGameDao
 ) {
 
     /*@Suppress("RedundantSuspendModifier")
@@ -15,9 +12,7 @@ class PartialGameRepository(
     }*/
 
     @Suppress("RedundantSuspendModifier")
-    @WorkerThread
-    suspend fun insert(partialGames: List<PartialGame>) {
-        partialGameDao.insert(partialGames)
-        gameRepository.rollupScore(partialGames)
+    suspend fun insert(partialGames: List<PartialGame>): List<Long> {
+        return partialGameDao.insert(partialGames)
     }
 }

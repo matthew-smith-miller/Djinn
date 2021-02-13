@@ -1,5 +1,6 @@
 package com.example.djinn
 
+import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
@@ -16,7 +17,7 @@ class RivalryRepository(private val rivalryDao: RivalryDao) {
     }
 
     @Suppress("RedundantSuspendModifier")
-    @WorkerThread
+    @UiThread
     suspend fun incrementScore(game: Game) {
         getRivalryById(game.rivalry).collect { rivalry ->
             rivalry.visitorScore += game.visitorScore
@@ -26,7 +27,7 @@ class RivalryRepository(private val rivalryDao: RivalryDao) {
     }
 
     @Suppress("RedundantSuspendModifier")
-    @WorkerThread
+    @UiThread
     suspend fun rollupScore(rivalryIds: Set<Int>) {
         val rivalriesToUpdate = mutableListOf<Rivalry>()
         rivalryDao.getRivalryWithGamesById(rivalryIds).collect { rivalriesWithGames ->
@@ -48,13 +49,13 @@ class RivalryRepository(private val rivalryDao: RivalryDao) {
     }
 
     @Suppress("RedundantSuspendModifier")
-    @WorkerThread
+    @UiThread
     suspend fun insert(rivalry: Rivalry) {
         rivalryDao.insertAll(rivalry)
     }
 
     @Suppress("RedundantSuspendModifier")
-    @WorkerThread
+    @UiThread
     suspend fun update(rivalry: Rivalry) {
         rivalryDao.update(rivalry)
     }

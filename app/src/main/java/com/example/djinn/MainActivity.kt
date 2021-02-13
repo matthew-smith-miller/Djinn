@@ -5,18 +5,18 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.viewModels
-import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
-    private val rivalryViewModel: RivalryViewModel by viewModels {
-        RivalryViewModelFactory((application as DjinnApplication).rivalryRepository)
+    private val viewModel: MainViewModel by viewModels {
+        MainViewModelFactory(
+            (application as DjinnApplication).playerRepository,
+            (application as DjinnApplication).rivalryRepository
+        )
     }
-    private val playerViewModel: PlayerViewModel by viewModels {
-        PlayerViewModelFactory((application as DjinnApplication).playerRepository)
-    }
+
     private val partialGameViewModel: PartialGameViewModel by viewModels {
         PartialGameViewModelFactory((application as DjinnApplication).partialGameRepository)
     }
@@ -26,7 +26,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        playerViewModel.allPlayers.observe(owner = this) { players ->
+        viewModel.allPlayers.observe(this) { players ->
             for (player in players) {
                 playerImageMap[player.id] = player.image
             }
@@ -37,13 +37,13 @@ class MainActivity : AppCompatActivity() {
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-        rivalryViewModel.allRivalries
-            .observe(owner = this) { rivalries ->
+        viewModel.allRivalries
+            .observe(this) { rivalries ->
                 rivalries.let { adapter.submitList(it) }
             }
 
         //Temp block to insert Partial Games
-        val controller = 1
+        val controller = 0
         if (controller == 1) {
             partialGameViewModel.insert(
                 listOf(

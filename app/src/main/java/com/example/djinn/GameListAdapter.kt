@@ -30,22 +30,17 @@ class GameListAdapter(
             current.status,
             current.homeScore
         )
+        holder.view.setOnClickListener {
+            onClick(current)
+        }
     }
 
-    class GameViewHolder(itemView: View, val onClick: (Game) -> Unit) :
+    class GameViewHolder(itemView: View) :
         RecyclerView.ViewHolder(itemView) {
         private val visitorScoreTextView = itemView.findViewById<TextView>(R.id.score_visitor)
         private val gameDateTextView = itemView.findViewById<TextView>(R.id.game_date)
         private val homeScoreTextView = itemView.findViewById<TextView>(R.id.score_home)
-        private var currentGame: Game? = null
-
-        init {
-            itemView.setOnClickListener {
-                currentGame?.let {
-                    onClick(it)
-                }
-            }
-        }
+        val view = itemView
 
         fun bind(id: Int, visitorScore: Int, endDate: Date?, status: String, homeScore: Int) {
             visitorScoreTextView.text = visitorScore.toString()
@@ -62,7 +57,7 @@ class GameListAdapter(
             fun create(parent: ViewGroup, onClick: (Game) -> Unit): GameViewHolder {
                 val view: View = LayoutInflater.from(parent.context)
                     .inflate(R.layout.list_item_game, parent, false)
-                return GameViewHolder(view, onClick)
+                return GameViewHolder(view)
             }
         }
     }

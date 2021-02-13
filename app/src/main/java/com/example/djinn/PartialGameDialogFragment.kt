@@ -8,16 +8,14 @@ import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.Spinner
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.observe
 import java.lang.ClassCastException
 import java.lang.IllegalStateException
 
 class PartialGameDialogFragment : DialogFragment() {
     internal lateinit var listener: PartialGameDialogListener
-
-    private val playerViewModel = ViewModelProvider(this).get(PlayerViewModel::class.java)
 
     interface PartialGameDialogListener {
         fun onDialogPositiveClick(
@@ -42,10 +40,14 @@ class PartialGameDialogFragment : DialogFragment() {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        //val playerViewModel = ViewModelProvider(this).get(PlayerViewModel::class.java)
+        val viewModel = activity?.let {
+            ViewModelProvider(it).get(GameActivityViewModel::class.java)
+        }
         val playerIds = arguments?.getIntegerArrayList(PLAYER_IDS)
         var playerIdsAndNames: List<DataClasses.IdNameTuple>? = null
         if (playerIds != null) {
-            playerViewModel.getPlayerIdsAndNames(playerIds).observe(owner = this) { returnedList ->
+            viewModel?.getPlayerIdsAndNames(playerIds)?.observe(this) { returnedList ->
                 playerIdsAndNames = returnedList
             }
         }
@@ -56,26 +58,26 @@ class PartialGameDialogFragment : DialogFragment() {
             val spinnerPlayers: Spinner? = dialogView.findViewById(R.id.spinner_players)
             val spinnerTypes: Spinner? = dialogView.findViewById(R.id.spinner_partial_game_types)
 
-            if (playerIdsAndNames != null) {
-                context?.let { el ->
-                    ArrayAdapter(
-                        el,
-                        android.R.layout.simple_spinner_item,
-                        playerIdsAndNames!!
-                    ).also { adapter ->
-                        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                        spinnerPlayers?.adapter = adapter
+            if (playerIds != null) {
+                viewModel?.getPlayerIdsAndNames(playerIds)?.observe(this) { returnedList ->
+                    context?.let { context ->
+                        ArrayAdapter(
+                            context,
+                            android.R.layout.simple_spinner_item,
+                            returnedList
+                        ).also { adapter ->
+                            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                            spinnerPlayers?.adapter = adapter
+                        }
+                        ArrayAdapter.createFromResource(
+                            context,
+                            R.array.dialog_partial_game_types,
+                            android.R.layout.simple_spinner_item
+                        ).also { adapter ->
+                            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                            spinnerTypes?.adapter = adapter
+                        }
                     }
-                }
-            }
-            context?.let { el ->
-                ArrayAdapter.createFromResource(
-                    el,
-                    R.array.dialog_partial_game_types,
-                    android.R.layout.simple_spinner_item
-                ).also { adapter ->
-                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                    spinnerTypes?.adapter = adapter
                 }
             }
             builder.setView(dialogView).apply {

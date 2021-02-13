@@ -17,9 +17,6 @@ class DjinnApplication : Application() {
         )
     }
     val partialGameRepository by lazy {
-        PartialGameRepository(
-            database.partialGameDao(),
-            gameRepository
-        )
+        PartialGameRepository(database.partialGameDao())
     }
 }

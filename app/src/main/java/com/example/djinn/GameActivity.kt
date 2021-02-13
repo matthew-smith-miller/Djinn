@@ -6,7 +6,6 @@ import android.widget.*
 import androidx.activity.viewModels
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -19,14 +18,13 @@ class GameActivity : FragmentActivity(),
     private var homePlayerId: Int = -1
     private var visitorPlayerId: Int = -1
 
-    private val rivalryViewModel: RivalryViewModel by viewModels {
-        RivalryViewModelFactory((application as DjinnApplication).rivalryRepository)
-    }
-    private val gameViewModel: GameViewModel by viewModels {
-        GameViewModelFactory((application as DjinnApplication).gameRepository)
-    }
-    private val partialGameViewModel: PartialGameViewModel by viewModels {
-        PartialGameViewModelFactory((application as DjinnApplication).partialGameRepository)
+    private val viewModel: GameActivityViewModel by viewModels {
+        GameActivityViewModelFactory(
+            (application as DjinnApplication).playerRepository,
+            (application as DjinnApplication).rivalryRepository,
+            (application as DjinnApplication).gameRepository,
+            (application as DjinnApplication).partialGameRepository
+        )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,15 +46,15 @@ class GameActivity : FragmentActivity(),
         recyclerView.layoutManager = LinearLayoutManager(this)
 
         //Retrieve Game with child Partial Games; Populate Game info & Partial Game RecyclerView
-        gameViewModel.getGameWithPartialGamesById(intent.getIntExtra(GAME, -1))
-            .observe(owner = this) { gameWithPartialGames ->
+        viewModel.getGameWithPartialGamesById(intent.getIntExtra(GAME, -1))
+            .observe(this) { gameWithPartialGames ->
                 gameWithPartialGames.let {
                     currentGame = it.game
                     partialGames = it.partialGames
                     findViewById<TextView>(R.id.score_visitor).text =
                         it.game.visitorScore.toString()
                     findViewById<TextView>(R.id.score_home).text = it.game.homeScore.toString()
-                    findViewById<TextView>(R.id.game_title).text = "Game" + it.game.number
+                    findViewById<TextView>(R.id.game_title).text = "Game " + it.game.number
                     findViewById<ImageView>(R.id.round_image_visitor).setImageResource(
                         visitorImageId
                     )
@@ -64,17 +62,16 @@ class GameActivity : FragmentActivity(),
                         homeImageId
                     )
                     adapter.submitList(partialGames)
+
+                    if (it.game.status == "Active") {
+                        (findViewById<View>(R.id.fab_add_partial_game) as FloatingActionButton).setOnClickListener {
+                            showPartialGameDialog()
+                        }
+                    } else {
+                        findViewById<View>(R.id.fab_add_partial_game).visibility = View.GONE
+                    }
                 }
             }
-
-        //Sets up or hides add partial game button depending on Game status
-        if (currentGame?.status == "Active") {
-            (findViewById<View>(R.id.fab_add_partial_game) as FloatingActionButton).setOnClickListener {
-                showPartialGameDialog()
-            }
-        } else {
-            findViewById<View>(R.id.fab_add_partial_game).visibility = View.GONE
-        }
     }
 
     private fun showPartialGameDialog() {
@@ -98,7 +95,7 @@ class GameActivity : FragmentActivity(),
                 type,
                 rawScore
             )
-            partialGameViewModel.insert(listOf(partialGame))
+            viewModel.insertPartialGames(listOf(partialGame))
         }
     }
 

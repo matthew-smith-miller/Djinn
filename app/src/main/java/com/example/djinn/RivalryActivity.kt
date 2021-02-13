@@ -6,11 +6,13 @@ import android.view.View
 import android.widget.*
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import kotlin.properties.Delegates
 
 class RivalryActivity : AppCompatActivity() {
+    private var visitorImageId by Delegates.notNull<Int>()
+    private var homeImageId by Delegates.notNull<Int>()
     private var currentRivalry: Rivalry? = null
     private var games: List<Game> = ArrayList()
     private val rivalryViewModel: RivalryViewModel by viewModels {
@@ -31,11 +33,11 @@ class RivalryActivity : AppCompatActivity() {
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-        val visitorImageId = intent.getIntExtra(VISITOR_IMAGE, -1)
-        val homeImageId = intent.getIntExtra(HOME_IMAGE, -1)
+        visitorImageId = intent.getIntExtra(VISITOR_IMAGE, -1)
+        homeImageId = intent.getIntExtra(HOME_IMAGE, -1)
 
         rivalryViewModel.getRivalryWithGamesById(intent.getIntExtra(RIVALRY, -1))
-            .observe(owner = this) { rivalryWithGames ->
+            .observe(this) { rivalryWithGames ->
                 rivalryWithGames.let {
                     currentRivalry = it.rivalry
                     games = it.games
@@ -55,7 +57,6 @@ class RivalryActivity : AppCompatActivity() {
 
         (findViewById<View>(R.id.button_add_game) as ImageButton).setOnClickListener {
             if (currentRivalry != null) {
-                var id: Int?
                 if (games.isNotEmpty()) {
                     if (games.reversed()[0].status != "Active") {
                         gameViewModel.insert(Game.makeGame(games.size + 1, currentRivalry!!.id))
@@ -70,7 +71,7 @@ class RivalryActivity : AppCompatActivity() {
                     gameViewModel.insert(Game.makeGame(1, currentRivalry!!.id))
                 }
                 val intent = Intent(this, GameActivity::class.java).apply {
-                    putExtra(GAME, currentRivalry!!.games.reversed()[0].id)
+                    putExtra(GAME, games.reversed()[0].id)
                     putExtra(VISITOR_PLAYER_ID, currentRivalry?.visitorPlayer)
                     putExtra(HOME_PLAYER_ID, currentRivalry?.homePlayer)
                     putExtra(VISITOR_IMAGE, visitorImageId)
@@ -83,8 +84,8 @@ class RivalryActivity : AppCompatActivity() {
 
     override fun onContentChanged() {
         super.onContentChanged()
-        findViewById<ListView>(R.id.listview_games).emptyView =
-            findViewById(R.id.listview_games_empty_text)
+        //findViewById<RecyclerView>(R.id.listview_games).emptyView =
+        //    findViewById(R.id.listview_games_empty_text)
     }
 
     /**
@@ -95,6 +96,8 @@ class RivalryActivity : AppCompatActivity() {
             putExtra(GAME, game.id)
             putExtra(HOME_PLAYER_ID, currentRivalry?.homePlayer)
             putExtra(VISITOR_PLAYER_ID, currentRivalry?.visitorPlayer)
+            putExtra(VISITOR_IMAGE, visitorImageId)
+            putExtra(HOME_IMAGE, homeImageId)
         }
         startActivity(intent)
     }

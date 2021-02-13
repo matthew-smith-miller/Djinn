@@ -19,7 +19,10 @@ interface GameDao {
     fun getGameWithPartialGamesById(id: Int): Flow<DataClasses.GameWithPartialGames>
 
     @Query("SELECT * FROM Game WHERE id IN (:ids)")
-    fun getGameWithPartialGamesById(ids: Set<Int>): Flow<List<DataClasses.GameWithPartialGames>>
+    fun getGameWithPartialGamesById(ids: List<Int>): Flow<List<DataClasses.GameWithPartialGames>>
+
+    @Query("SELECT * FROM Game WHERE id IN (:ids)")
+    fun getGamesWithPartialGamesById(ids: List<Int>): List<DataClasses.GameWithPartialGames>
 
     @Query("SELECT * FROM Game WHERE rivalry = :rivalryId")
     fun getGamesFromRivalryIdAsList(rivalryId: Int): List<Game>

@@ -13,18 +13,12 @@ class GameRepository(
     fun getAllGames(): Flow<List<Game>> {
         return gameDao.getAllGames()
     }
-
     fun getGameWithPartialGamesById(id: Int): Flow<DataClasses.GameWithPartialGames> {
         return gameDao.getGameWithPartialGamesById(id)
     }
 
     @Suppress("RedundantSuspendModifier")
-    @WorkerThread
-    suspend fun rollupScore(partialGames: List<PartialGame>) {
-        val gameIds = mutableSetOf<Int>()
-        for (partialGame in partialGames) {
-            gameIds.add(partialGame.game)
-        }
+    suspend fun rollupScore(gameIds: List<Int>) {
         gameDao.getGameWithPartialGamesById(gameIds).collect { gamesWithPartialGames ->
             val gamesToUpdate = mutableListOf<Game>()
             val bonusesToInsert = mutableListOf<PartialGame>()
@@ -143,7 +137,6 @@ class GameRepository(
     }
 
     @Suppress("RedundantSuspendModifier")
-    @WorkerThread
     suspend fun incrementScore(partialGame: PartialGame) {
         gameDao.getGameWithPartialGamesById(partialGame.game).collect { gameWithPartialGames ->
             gameDao.getRivalryPlayerIds(gameWithPartialGames.game.rivalry)
@@ -225,19 +218,16 @@ class GameRepository(
     }
 
     @Suppress("RedundantSuspendModifier")
-    @WorkerThread
     suspend fun insert(game: Game) {
         gameDao.insertAll(game)
     }
 
     @Suppress("RedundantSuspendModifier")
-    @WorkerThread
     suspend fun update(game: Game) {
         gameDao.update(game)
     }
 
     @Suppress("RedundantSuspendModifier")
-    @WorkerThread
     suspend fun update(games: List<Game>) {
         gameDao.update(games)
     }
