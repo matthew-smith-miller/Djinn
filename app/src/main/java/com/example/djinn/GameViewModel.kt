@@ -3,9 +3,10 @@ package com.example.djinn
 import androidx.lifecycle.*
 import kotlinx.coroutines.launch
 import java.lang.IllegalArgumentException
+import kotlin.properties.Delegates
 
 class GameViewModel(private val gameRepository: GameRepository) : ViewModel() {
-
+    val insertedGameId = MutableLiveData<Long>()
     fun getAllGames(): LiveData<List<Game>> {
         return gameRepository.getAllGames().asLiveData()
     }
@@ -14,12 +15,10 @@ class GameViewModel(private val gameRepository: GameRepository) : ViewModel() {
         return gameRepository.getGameWithPartialGamesById(gameId).asLiveData()
     }
 
-    fun insert(game: Game) = viewModelScope.launch {
-        gameRepository.insert(game)
-    }
-
-    fun update(game: Game) = viewModelScope.launch {
-        gameRepository.update(game)
+    fun insert(game: Game) {
+        viewModelScope.launch {
+            insertedGameId.value = gameRepository.insert(game)
+        }
     }
 }
 

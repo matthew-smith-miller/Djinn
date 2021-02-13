@@ -19,18 +19,23 @@ class GameActivityViewModel(
         insertPartialGamesAndRollupScore(partialGames)
     }
 
-    suspend fun insertPartialGamesAndRollupScore(partialGames: List<PartialGame>) {
+    private suspend fun insertPartialGamesAndRollupScore(partialGames: List<PartialGame>) {
         insertPartialGamesSuspend(partialGames)
         val gameIds = mutableListOf<Int>()
         for (partialGame in partialGames) {
             gameIds.add(partialGame.game)
         }
         Log.d("gameIds: ", gameIds.toString())
-        gameRepository.rollupScore(gameIds)
+        val rivalryIds = gameRepository.rollupScore(gameIds)
+        rollupRivalryScores(rivalryIds)
     }
 
-    suspend fun insertPartialGamesSuspend(partialGames: List<PartialGame>) {
+    private suspend fun insertPartialGamesSuspend(partialGames: List<PartialGame>) {
         partialGameRepository.insert(partialGames)
+    }
+
+    private suspend fun rollupRivalryScores(rivalryIds: List<Int>) {
+        rivalryRepository.rollupScore(rivalryIds)
     }
 
     fun getGameWithPartialGamesById(gameId: Int): LiveData<DataClasses.GameWithPartialGames> {

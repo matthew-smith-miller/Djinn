@@ -11,6 +11,10 @@ class PlayerRepository(private val playerDao: PlayerDao) {
         return playerDao.getPlayerByName(name)
     }
 
+    fun getPlayerById(id: Int): Flow<Player> {
+        return playerDao.getPlayerById(id)
+    }
+
     fun getPlayerIdsAndNames(ids: List<Int>): Flow<List<DataClasses.IdNameTuple>> {
         return playerDao.getPlayerIdAndNames(ids)
     }

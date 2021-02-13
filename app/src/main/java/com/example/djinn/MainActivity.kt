@@ -17,8 +17,13 @@ class MainActivity : AppCompatActivity() {
         )
     }
 
-    private val partialGameViewModel: PartialGameViewModel by viewModels {
-        PartialGameViewModelFactory((application as DjinnApplication).partialGameRepository)
+    private val gameActivityViewModel: GameActivityViewModel by viewModels {
+        GameActivityViewModelFactory(
+            (application as DjinnApplication).playerRepository,
+            (application as DjinnApplication).rivalryRepository,
+            (application as DjinnApplication).gameRepository,
+            (application as DjinnApplication).partialGameRepository
+        )
     }
     private val playerImageMap: TreeMap<Int, Int> = TreeMap()
 
@@ -45,7 +50,7 @@ class MainActivity : AppCompatActivity() {
         //Temp block to insert Partial Games
         val controller = 0
         if (controller == 1) {
-            partialGameViewModel.insert(
+            gameActivityViewModel.insertPartialGames(
                 listOf(
                     PartialGame.makePartialGame(57, 35, "Knock", 6),
                     PartialGame.makePartialGame(57, 35, "Knock", 39),
@@ -56,48 +61,48 @@ class MainActivity : AppCompatActivity() {
                     PartialGame.makePartialGame(57, 33, "Knock", 10),
                     PartialGame.makePartialGame(57, 33, "Knock", 22),
                     PartialGame.makePartialGame(57, 33, "Knock", 5),
-                    PartialGame.makePartialGame(57, 35, "Knock", 28)
+                    PartialGame.makePartialGame(57, 35, "Knock", 28),
+                    PartialGame.makePartialGame(58, 33, "Knock", 57),
+                    PartialGame.makePartialGame(58, 33, "Knock", 24),
+                    PartialGame.makePartialGame(58, 33, "Knock", 9),
+                    PartialGame.makePartialGame(58, 33, "Knock", 33),
+                    PartialGame.makePartialGame(59, 33, "Gin", 60),
+                    PartialGame.makePartialGame(59, 35, "Knock", 44),
+                    PartialGame.makePartialGame(59, 33, "Knock", 27),
+                    PartialGame.makePartialGame(60, 33, "Undercut", 2),
+                    PartialGame.makePartialGame(60, 33, "Knock", 40),
+                    PartialGame.makePartialGame(60, 33, "Knock", 13),
+                    PartialGame.makePartialGame(60, 35, "Knock", 5),
+                    PartialGame.makePartialGame(60, 35, "Gin", 24),
+                    PartialGame.makePartialGame(60, 33, "Knock", 13),
+                    PartialGame.makePartialGame(60, 33, "Knock", 20),
+                    PartialGame.makePartialGame(60, 35, "Knock", 12),
+                    PartialGame.makePartialGame(60, 35, "Knock", 28),
+                    PartialGame.makePartialGame(60, 33, "Knock", 14),
+                    PartialGame.makePartialGame(61, 35, "Knock", 24),
+                    PartialGame.makePartialGame(61, 33, "Knock", 14),
+                    PartialGame.makePartialGame(61, 33, "Knock", 11),
+                    PartialGame.makePartialGame(61, 33, "Knock", 58),
+                    PartialGame.makePartialGame(61, 33, "Knock", 41),
+                    PartialGame.makePartialGame(62, 35, "Knock", 30),
+                    PartialGame.makePartialGame(62, 35, "Knock", 41),
+                    PartialGame.makePartialGame(62, 33, "Knock", 17),
+                    PartialGame.makePartialGame(62, 35, "Knock", 19),
+                    PartialGame.makePartialGame(62, 35, "Knock", 12),
+                    PartialGame.makePartialGame(63, 33, "Knock", 34),
+                    PartialGame.makePartialGame(63, 35, "Knock", 17),
+                    PartialGame.makePartialGame(63, 35, "Undercut", 0),
+                    PartialGame.makePartialGame(63, 33, "Gin", 40),
+                    PartialGame.makePartialGame(63, 35, "Knock", 7),
+                    PartialGame.makePartialGame(63, 33, "Knock", 42),
+                    PartialGame.makePartialGame(64, 35, "Knock", 18),
+                    PartialGame.makePartialGame(64, 35, "Knock", 23),
+                    PartialGame.makePartialGame(64, 35, "Undercut", 3),
+                    PartialGame.makePartialGame(64, 35, "Knock", 45),
+                    PartialGame.makePartialGame(64, 35, "Knock", 10)
                 )
             )
         }
-        /*partialGameViewModel.insert(PartialGame.makePartialGame(58, 33, "Knock", 57))
-        partialGameViewModel.insert(PartialGame.makePartialGame(58, 33, "Knock", 24))
-        partialGameViewModel.insert(PartialGame.makePartialGame(58, 33, "Knock", 9))
-        partialGameViewModel.insert(PartialGame.makePartialGame(58, 33, "Knock", 33))
-        partialGameViewModel.insert(PartialGame.makePartialGame(59, 33, "Gin", 60))
-        partialGameViewModel.insert(PartialGame.makePartialGame(59, 35, "Knock", 44))
-        partialGameViewModel.insert(PartialGame.makePartialGame(59, 33, "Knock", 27))
-        partialGameViewModel.insert(PartialGame.makePartialGame(60, 33, "Undercut", 2))
-        partialGameViewModel.insert(PartialGame.makePartialGame(60, 33, "Knock", 40))
-        partialGameViewModel.insert(PartialGame.makePartialGame(60, 33, "Knock", 13))
-        partialGameViewModel.insert(PartialGame.makePartialGame(60, 35, "Knock", 5))
-        partialGameViewModel.insert(PartialGame.makePartialGame(60, 35, "Gin", 24))
-        partialGameViewModel.insert(PartialGame.makePartialGame(60, 33, "Knock", 13))
-        partialGameViewModel.insert(PartialGame.makePartialGame(60, 33, "Knock", 20))
-        partialGameViewModel.insert(PartialGame.makePartialGame(60, 35, "Knock", 12))
-        partialGameViewModel.insert(PartialGame.makePartialGame(60, 35, "Knock", 28))
-        partialGameViewModel.insert(PartialGame.makePartialGame(60, 33, "Knock", 14))
-        partialGameViewModel.insert(PartialGame.makePartialGame(61, 35, "Knock", 24))
-        partialGameViewModel.insert(PartialGame.makePartialGame(61, 33, "Knock", 14))
-        partialGameViewModel.insert(PartialGame.makePartialGame(61, 33, "Knock", 11))
-        partialGameViewModel.insert(PartialGame.makePartialGame(61, 33, "Knock", 58))
-        partialGameViewModel.insert(PartialGame.makePartialGame(61, 33, "Knock", 41))
-        partialGameViewModel.insert(PartialGame.makePartialGame(62, 35, "Knock", 30))
-        partialGameViewModel.insert(PartialGame.makePartialGame(62, 35, "Knock", 41))
-        partialGameViewModel.insert(PartialGame.makePartialGame(62, 33, "Knock", 17))
-        partialGameViewModel.insert(PartialGame.makePartialGame(62, 35, "Knock", 19))
-        partialGameViewModel.insert(PartialGame.makePartialGame(62, 35, "Knock", 12))
-        partialGameViewModel.insert(PartialGame.makePartialGame(63, 33, "Knock", 34))
-        partialGameViewModel.insert(PartialGame.makePartialGame(63, 35, "Knock", 17))
-        partialGameViewModel.insert(PartialGame.makePartialGame(63, 35, "Undercut", 0))
-        partialGameViewModel.insert(PartialGame.makePartialGame(63, 33, "Gin", 40))
-        partialGameViewModel.insert(PartialGame.makePartialGame(63, 35, "Knock", 7))
-        partialGameViewModel.insert(PartialGame.makePartialGame(63, 33, "Knock", 42))
-        partialGameViewModel.insert(PartialGame.makePartialGame(64, 35, "Knock", 18))
-        partialGameViewModel.insert(PartialGame.makePartialGame(64, 35, "Knock", 23))
-        partialGameViewModel.insert(PartialGame.makePartialGame(64, 35, "Undercut", 3))
-        partialGameViewModel.insert(PartialGame.makePartialGame(64, 35, "Knock", 45))
-        partialGameViewModel.insert(PartialGame.makePartialGame(64, 35, "Knock", 10))*/
     }
 
     /**

@@ -4,6 +4,7 @@ import androidx.annotation.WorkerThread
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import java.util.*
+import kotlin.collections.HashMap
 
 class GameRepository(
     private val gameDao: GameDao,
@@ -18,125 +19,126 @@ class GameRepository(
     }
 
     @Suppress("RedundantSuspendModifier")
-    suspend fun rollupScore(gameIds: List<Int>) {
-        gameDao.getGameWithPartialGamesById(gameIds).collect { gamesWithPartialGames ->
-            val gamesToUpdate = mutableListOf<Game>()
-            val bonusesToInsert = mutableListOf<PartialGame>()
-            val rivalryIdsToUpdate = mutableSetOf<Int>()
-            for (gameWithPartialGames in gamesWithPartialGames) {
-                gameDao.getRivalryPlayerIds(gameWithPartialGames.game.rivalry)
-                    .collect { rivalryPlayerIdTuple ->
-                        var homePartialGames = 0
-                        var homeScore = 0
-                        var homeBonus = 0
-                        var visitorPartialGames = 0
-                        var visitorScore = 0
-                        var visitorBonus = 0
-                        for (partialGame in gameWithPartialGames.partialGames) {
-                            when (partialGame.player) {
-                                rivalryPlayerIdTuple.visitorPlayerId -> when (partialGame.type) {
-                                    "Bonus" -> visitorBonus += partialGame.totalScore
-                                    else -> {
-                                        visitorScore += partialGame.totalScore
-                                        visitorPartialGames++
-                                    }
-                                }
-                                else -> when (partialGame.type) {
-                                    "Bonus" -> homeBonus += partialGame.totalScore
-                                    else -> {
-                                        homeScore += partialGame.totalScore
-                                        homePartialGames++
-                                    }
-                                }
+    suspend fun rollupScore(gameIds: List<Int>): List<Int> {
+        val gamesWithPartialGames = gameDao.getGamesWithPartialGamesById(gameIds)
+        val rivalryIdsToUpdate = gamesWithPartialGames.map { it.game.rivalry }
+        val rivalryIdToPlayerIdsMap =
+            gameDao.getRivalryPlayerIds(rivalryIdsToUpdate).map { it.id to it }.toMap()
+        val gamesToUpdate = mutableListOf<Game>()
+        val bonusesToInsert = mutableListOf<PartialGame>()
+        for (gameWithPartialGames in gamesWithPartialGames) {
+            val rivalryPlayerIdTuple = rivalryIdToPlayerIdsMap[gameWithPartialGames.game.rivalry]
+            if (rivalryPlayerIdTuple != null) {
+                var homePartialGames = 0
+                var homeScore = 0
+                var homeBonus = 0
+                var visitorPartialGames = 0
+                var visitorScore = 0
+                var visitorBonus = 0
+                for (partialGame in gameWithPartialGames.partialGames) {
+                    when (partialGame.player) {
+                        rivalryPlayerIdTuple.visitorPlayerId -> when (partialGame.type) {
+                            "Bonus" -> visitorBonus += partialGame.totalScore
+                            else -> {
+                                visitorScore += partialGame.totalScore
+                                visitorPartialGames++
                             }
                         }
-                        if (gameWithPartialGames.game.status == "Completed") {
-                            gameWithPartialGames.game.visitorScore = visitorScore + visitorBonus
-                            gameWithPartialGames.game.homeScore = homeScore + homeBonus
-                        } else {
-                            gameWithPartialGames.game.visitorScore = visitorScore
-                            gameWithPartialGames.game.homeScore = homeScore
-                            if (gameWithPartialGames.game.visitorScore >= 100 ||
-                                gameWithPartialGames.game.homeScore >= 100
-                            ) {
-                                gameWithPartialGames.game.status = "Completed"
-                                if (gameWithPartialGames.game.homeScore >= 100) {
-                                    bonusesToInsert.add(
-                                        PartialGame.makeBonus(
-                                            gameWithPartialGames.game.id,
-                                            rivalryPlayerIdTuple.homePlayerId,
-                                            "Win bonus",
-                                            100
-                                        )
-                                    )
-                                    gameWithPartialGames.game.homeScore += 100
-                                } else {
-                                    bonusesToInsert.add(
-                                        PartialGame.makeBonus(
-                                            gameWithPartialGames.game.id,
-                                            rivalryPlayerIdTuple.visitorPlayerId,
-                                            "Win bonus",
-                                            100
-                                        )
-                                    )
-                                    gameWithPartialGames.game.visitorScore += 100
-                                }
-                                if (homePartialGames > 0) {
-                                    bonusesToInsert.add(
-                                        PartialGame.makeBonus(
-                                            gameWithPartialGames.game.id,
-                                            rivalryPlayerIdTuple.homePlayerId,
-                                            "Partial game bonus",
-                                            homePartialGames * 20
-                                        )
-                                    )
-                                    gameWithPartialGames.game.homeScore += homePartialGames * 20
-                                } else {
-                                    bonusesToInsert.add(
-                                        PartialGame.makeBonus(
-                                            gameWithPartialGames.game.id,
-                                            rivalryPlayerIdTuple.visitorPlayerId,
-                                            "Shutout bonus",
-                                            100
-                                        )
-                                    )
-                                    gameWithPartialGames.game.visitorScore += 100
-                                }
-                                if (visitorPartialGames > 0) {
-                                    bonusesToInsert.add(
-                                        PartialGame.makeBonus(
-                                            gameWithPartialGames.game.id,
-                                            rivalryPlayerIdTuple.visitorPlayerId,
-                                            "Partial game bonus",
-                                            visitorPartialGames * 20
-                                        )
-                                    )
-                                    gameWithPartialGames.game.visitorScore += visitorPartialGames * 20
-                                } else {
-                                    bonusesToInsert.add(
-                                        PartialGame.makeBonus(
-                                            gameWithPartialGames.game.id,
-                                            rivalryPlayerIdTuple.homePlayerId,
-                                            "Shutout bonus",
-                                            100
-                                        )
-                                    )
-                                    gameWithPartialGames.game.homeScore += 100
-                                }
+                        else -> when (partialGame.type) {
+                            "Bonus" -> homeBonus += partialGame.totalScore
+                            else -> {
+                                homeScore += partialGame.totalScore
+                                homePartialGames++
                             }
-
                         }
-                        rivalryIdsToUpdate.add(gameWithPartialGames.game.rivalry)
-                        gamesToUpdate.add(gameWithPartialGames.game)
                     }
+                }
+                if (gameWithPartialGames.game.status == "Completed") {
+                    gameWithPartialGames.game.visitorScore = visitorScore + visitorBonus
+                    gameWithPartialGames.game.homeScore = homeScore + homeBonus
+                } else {
+                    gameWithPartialGames.game.visitorScore = visitorScore
+                    gameWithPartialGames.game.homeScore = homeScore
+                    if (gameWithPartialGames.game.visitorScore >= 100 ||
+                        gameWithPartialGames.game.homeScore >= 100
+                    ) {
+                        gameWithPartialGames.game.status = "Completed"
+                        gameWithPartialGames.game.endDate = Calendar.getInstance().time
+                        if (gameWithPartialGames.game.homeScore >= 100) {
+                            bonusesToInsert.add(
+                                PartialGame.makeBonus(
+                                    gameWithPartialGames.game.id,
+                                    rivalryPlayerIdTuple.homePlayerId,
+                                    "Win bonus",
+                                    100
+                                )
+                            )
+                            gameWithPartialGames.game.homeScore += 100
+                        } else {
+                            bonusesToInsert.add(
+                                PartialGame.makeBonus(
+                                    gameWithPartialGames.game.id,
+                                    rivalryPlayerIdTuple.visitorPlayerId,
+                                    "Win bonus",
+                                    100
+                                )
+                            )
+                            gameWithPartialGames.game.visitorScore += 100
+                        }
+                        if (homePartialGames > 0) {
+                            bonusesToInsert.add(
+                                PartialGame.makeBonus(
+                                    gameWithPartialGames.game.id,
+                                    rivalryPlayerIdTuple.homePlayerId,
+                                    "Partial game bonus",
+                                    homePartialGames * 20
+                                )
+                            )
+                            gameWithPartialGames.game.homeScore += homePartialGames * 20
+                        } else {
+                            bonusesToInsert.add(
+                                PartialGame.makeBonus(
+                                    gameWithPartialGames.game.id,
+                                    rivalryPlayerIdTuple.visitorPlayerId,
+                                    "Shutout bonus",
+                                    100
+                                )
+                            )
+                            gameWithPartialGames.game.visitorScore += 100
+                        }
+                        if (visitorPartialGames > 0) {
+                            bonusesToInsert.add(
+                                PartialGame.makeBonus(
+                                    gameWithPartialGames.game.id,
+                                    rivalryPlayerIdTuple.visitorPlayerId,
+                                    "Partial game bonus",
+                                    visitorPartialGames * 20
+                                )
+                            )
+                            gameWithPartialGames.game.visitorScore += visitorPartialGames * 20
+                        } else {
+                            bonusesToInsert.add(
+                                PartialGame.makeBonus(
+                                    gameWithPartialGames.game.id,
+                                    rivalryPlayerIdTuple.homePlayerId,
+                                    "Shutout bonus",
+                                    100
+                                )
+                            )
+                            gameWithPartialGames.game.homeScore += 100
+                        }
+                    }
+
+                }
+                gamesToUpdate.add(gameWithPartialGames.game)
             }
-            gameDao.update(gamesToUpdate)
-            partialGameDao.insert(bonusesToInsert)
-            rivalryRepository.rollupScore(rivalryIdsToUpdate)
         }
+        gameDao.update(gamesToUpdate)
+        partialGameDao.insert(bonusesToInsert)
+        return rivalryIdsToUpdate
     }
 
-    @Suppress("RedundantSuspendModifier")
+    /*@Suppress("RedundantSuspendModifier")
     suspend fun incrementScore(partialGame: PartialGame) {
         gameDao.getGameWithPartialGamesById(partialGame.game).collect { gameWithPartialGames ->
             gameDao.getRivalryPlayerIds(gameWithPartialGames.game.rivalry)
@@ -215,11 +217,11 @@ class GameRepository(
                 }
 
         }
-    }
+    }*/
 
     @Suppress("RedundantSuspendModifier")
-    suspend fun insert(game: Game) {
-        gameDao.insertAll(game)
+    suspend fun insert(game: Game): Long {
+        return gameDao.insert(game)
     }
 
     @Suppress("RedundantSuspendModifier")

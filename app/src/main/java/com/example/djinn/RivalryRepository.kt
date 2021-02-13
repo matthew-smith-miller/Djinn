@@ -28,24 +28,23 @@ class RivalryRepository(private val rivalryDao: RivalryDao) {
 
     @Suppress("RedundantSuspendModifier")
     @UiThread
-    suspend fun rollupScore(rivalryIds: Set<Int>) {
+    suspend fun rollupScore(rivalryIds: List<Int>) {
         val rivalriesToUpdate = mutableListOf<Rivalry>()
-        rivalryDao.getRivalryWithGamesById(rivalryIds).collect { rivalriesWithGames ->
-            for (rivalryWithGames in rivalriesWithGames) {
-                var visitorScore = 0
-                var homeScore = 0
-                for (game in rivalryWithGames.games) {
-                    if (game.status == "Completed") {
-                        visitorScore += game.visitorScore
-                        homeScore += game.homeScore
-                    }
+        val rivalriesWithGames = rivalryDao.getRivalryWithGamesById(rivalryIds)
+        for (rivalryWithGames in rivalriesWithGames) {
+            var visitorScore = 0
+            var homeScore = 0
+            for (game in rivalryWithGames.games) {
+                if (game.status == "Completed") {
+                    visitorScore += game.visitorScore
+                    homeScore += game.homeScore
                 }
-                rivalryWithGames.rivalry.visitorScore = visitorScore
-                rivalryWithGames.rivalry.homeScore = homeScore
-                rivalriesToUpdate.add(rivalryWithGames.rivalry)
             }
-            rivalryDao.update(rivalriesToUpdate)
+            rivalryWithGames.rivalry.visitorScore = visitorScore
+            rivalryWithGames.rivalry.homeScore = homeScore
+            rivalriesToUpdate.add(rivalryWithGames.rivalry)
         }
+        rivalryDao.update(rivalriesToUpdate)
     }
 
     @Suppress("RedundantSuspendModifier")

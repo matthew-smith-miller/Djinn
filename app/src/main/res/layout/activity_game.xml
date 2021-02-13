@@ -50,6 +50,17 @@
                 tools:src="@drawable/neil" />
         </androidx.cardview.widget.CardView>
 
+        <TextView
+            android:id="@+id/name_visitor"
+            style="@style/HeaderTextQuaternary"
+            android:layout_width="@dimen/square_badge_height_width"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/round_badge_visitor"
+            android:layout_alignStart="@id/round_badge_visitor"
+            android:layout_marginTop="6dp"
+            android:maxLines="1"
+            tools:text="Neil Katuna" />
+
         <androidx.cardview.widget.CardView
             android:id="@+id/round_badge_home"
             android:layout_width="@dimen/square_badge_height_width"
@@ -69,12 +80,31 @@
         </androidx.cardview.widget.CardView>
 
         <TextView
+            android:id="@+id/name_home"
+            style="@style/HeaderTextQuaternary"
+            android:layout_width="@dimen/square_badge_height_width"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/round_badge_home"
+            android:layout_alignEnd="@id/round_badge_home"
+            android:layout_marginTop="6dp"
+            tools:text="Matt Miller" />
+
+        <TextView
+            android:id="@+id/score_home"
+            style="@style/HeaderText"
+            android:layout_width="@dimen/square_badge_height_width"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@id/round_badge_home"
+            android:layout_alignTop="@id/score_visitor"
+            tools:text="93" />
+
+        <TextView
             android:id="@+id/score_visitor"
             android:layout_width="@dimen/square_badge_height_width"
             android:layout_height="wrap_content"
             tools:text="22"
             style="@style/HeaderText"
-            android:layout_below="@id/round_badge_visitor"
+            android:layout_below="@id/name_visitor"
             android:layout_alignEnd="@id/round_badge_visitor"
             android:layout_marginTop="12dp" />
 
@@ -99,14 +129,6 @@
             android:layout_alignTop="@id/round_badge_visitor"
             android:textAlignment="center" />
 
-        <TextView
-            android:id="@+id/score_home"
-            android:layout_width="@dimen/square_badge_height_width"
-            android:layout_height="wrap_content"
-            tools:text="93"
-            style="@style/HeaderText"
-            android:layout_alignTop="@id/score_visitor"
-            android:layout_alignStart="@id/round_badge_home" />
     </RelativeLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton

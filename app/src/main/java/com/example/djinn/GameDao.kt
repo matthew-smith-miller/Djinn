@@ -22,7 +22,7 @@ interface GameDao {
     fun getGameWithPartialGamesById(ids: List<Int>): Flow<List<DataClasses.GameWithPartialGames>>
 
     @Query("SELECT * FROM Game WHERE id IN (:ids)")
-    fun getGamesWithPartialGamesById(ids: List<Int>): List<DataClasses.GameWithPartialGames>
+    suspend fun getGamesWithPartialGamesById(ids: List<Int>): List<DataClasses.GameWithPartialGames>
 
     @Query("SELECT * FROM Game WHERE rivalry = :rivalryId")
     fun getGamesFromRivalryIdAsList(rivalryId: Int): List<Game>
@@ -30,11 +30,14 @@ interface GameDao {
     @Query("SELECT * FROM Game WHERE id = :id")
     fun getGameById(id: Int): Game
 
-    @Query("SELECT id, visitor_player, home_player FROM Rivalry WHERE id = :rivalryId")
-    fun getRivalryPlayerIds(rivalryId: Int): Flow<DataClasses.RivalryPlayerIdTuple>
+    @Query("SELECT id, visitor_player, home_player FROM Rivalry WHERE id IN (:rivalryIds)")
+    suspend fun getRivalryPlayerIds(rivalryIds: List<Int>): List<DataClasses.RivalryPlayerIdTuple>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertAll(vararg games: Game)
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insert(game: Game): Long
 
     @Update
     suspend fun update(vararg games: Game)

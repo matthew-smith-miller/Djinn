@@ -12,6 +12,10 @@ class PlayerViewModel(private val repository: PlayerRepository) : ViewModel() {
         return repository.getPlayerByName(name).asLiveData()
     }
 
+    fun getPlayerById(id: Int): LiveData<Player> {
+        return repository.getPlayerById(id).asLiveData()
+    }
+
     fun getPlayerIdsAndNames(ids: List<Int>): LiveData<List<DataClasses.IdNameTuple>> {
         return repository.getPlayerIdsAndNames(ids).asLiveData()
     }

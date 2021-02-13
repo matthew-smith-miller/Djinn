@@ -17,6 +17,9 @@ interface PlayerDao {
     @Query("SELECT * FROM Player WHERE name = :name")
     fun getPlayerByNameAsPlayer(name: String): Player
 
+    @Query("SELECT * FROM Player WHERE id = :id")
+    fun getPlayerById(id: Int): Flow<Player>
+
     @Query("SELECT id, name FROM Player WHERE id IN (:ids)")
     fun getPlayerIdAndNames(ids: List<Int>): Flow<List<DataClasses.IdNameTuple>>
 

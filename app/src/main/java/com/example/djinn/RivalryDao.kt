@@ -20,7 +20,7 @@ interface RivalryDao {
 
     @Transaction
     @Query("SELECT * FROM Rivalry WHERE id IN (:ids)")
-    fun getRivalryWithGamesById(ids: Set<Int>): Flow<List<DataClasses.RivalryWithGames>>
+    suspend fun getRivalryWithGamesById(ids: List<Int>): List<DataClasses.RivalryWithGames>
 
     @Transaction
     @Query("SELECT * FROM Rivalry")
