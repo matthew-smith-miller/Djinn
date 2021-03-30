@@ -12,4 +12,5 @@
     <string name="partial_game_bonus">Bonus</string>
     <string name="view_game">View Game</string>
     <string name="all_rivalries">All Rivalries</string>
+    <string name="vs">vs.</string>
 </resources>

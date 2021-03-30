@@ -12,6 +12,10 @@ class GameActivityViewModel(
     private val partialGameRepository: PartialGameRepository
 ) : ViewModel() {
 
+    fun getPlayerById(id: Int): LiveData<Player> {
+        return playerRepository.getPlayerById(id).asLiveData()
+    }
+
     fun insertPartialGames(partialGames: List<PartialGame>) = viewModelScope.launch {
         insertPartialGamesAndRollupScore(partialGames)
     }

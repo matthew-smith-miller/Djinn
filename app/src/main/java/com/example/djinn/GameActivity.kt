@@ -37,8 +37,11 @@ class GameActivity : FragmentActivity(),
 
         homePlayerId = intent.getIntExtra(HOME_PLAYER_ID, -1)
         visitorPlayerId = intent.getIntExtra(VISITOR_PLAYER_ID, -1)
-        val visitorImageId = intent.getIntExtra(VISITOR_IMAGE, -1)
-        val homeImageId = intent.getIntExtra(HOME_IMAGE, -1)
+
+        val visitorImage = findViewById<ImageView>(R.id.round_image_visitor)
+        val visitorName = findViewById<TextView>(R.id.name_visitor)
+        val homeImage = findViewById<ImageView>(R.id.round_image_home)
+        val homeName = findViewById<TextView>(R.id.name_home)
 
         val recyclerView = findViewById<RecyclerView>(R.id.listview_games)
         val adapter = PartialGameListAdapter(homePlayerId)
@@ -55,12 +58,6 @@ class GameActivity : FragmentActivity(),
                         it.game.visitorScore.toString()
                     findViewById<TextView>(R.id.score_home).text = it.game.homeScore.toString()
                     findViewById<TextView>(R.id.game_title).text = "Game " + it.game.number
-                    findViewById<ImageView>(R.id.round_image_visitor).setImageResource(
-                        visitorImageId
-                    )
-                    findViewById<ImageView>(R.id.round_image_home).setImageResource(
-                        homeImageId
-                    )
                     adapter.submitList(partialGames)
 
                     if (it.game.status == "Active") {
@@ -71,6 +68,28 @@ class GameActivity : FragmentActivity(),
                         findViewById<View>(R.id.fab_add_partial_game).visibility = View.GONE
                     }
                 }
+            }
+        viewModel.getPlayerById(visitorPlayerId)
+            .observe(this) { player ->
+                visitorImage.setImageResource(
+                    resources.getIdentifier(
+                        player.imageName,
+                        "drawable",
+                        packageName
+                    )
+                )
+                visitorName.text = player.name
+            }
+        viewModel.getPlayerById(homePlayerId)
+            .observe(this) { player ->
+                homeImage.setImageResource(
+                    resources.getIdentifier(
+                        player.imageName,
+                        "drawable",
+                        packageName
+                    )
+                )
+                homeName.text = player.name
             }
     }
 

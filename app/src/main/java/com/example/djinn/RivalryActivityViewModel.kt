@@ -11,12 +11,6 @@ class RivalryActivityViewModel(
     private val gameRepository: GameRepository
 ) : ViewModel() {
     val insertedGameId = MutableLiveData<Long>()
-    private val _visitorPlayer = MutableLiveData<Player>()
-    private val _homePlayer = MutableLiveData<Player>()
-    val visitorPlayer: LiveData<Player?>
-        get() = _visitorPlayer
-    val homePlayer: LiveData<Player?>
-        get() = _homePlayer
 
     fun getPlayerById(id: Int): LiveData<Player> {
         return playerRepository.getPlayerById(id).asLiveData()
@@ -24,19 +18,6 @@ class RivalryActivityViewModel(
 
     fun getRivalryWithGamesById(id: Int): LiveData<DataClasses.RivalryWithGames> {
         return rivalryRepository.getRivalryWithGamesById(id).asLiveData()
-    }
-
-    fun setPlayersFromRivalry(rivalry: Rivalry) {
-        viewModelScope.launch {
-            setPlayers(rivalry.visitorPlayer, rivalry.visitorPlayer)
-        }
-    }
-
-    private suspend fun setPlayers(visitorPlayerId: Int, homePlayerId: Int) {
-        viewModelScope.launch {
-            _visitorPlayer.value = getPlayerById(visitorPlayerId).value
-            _homePlayer.value = getPlayerById(homePlayerId).value
-        }
     }
 
     fun insert(game: Game) {

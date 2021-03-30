@@ -100,7 +100,7 @@
             android:layout_height="@dimen/square_badge_height_width"
             android:layout_centerHorizontal="true"
             android:textAlignment="center"
-            tools:text="vs." />
+            android:text="@string/vs" />
 
         <!--
         <View

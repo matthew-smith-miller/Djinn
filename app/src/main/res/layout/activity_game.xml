@@ -58,8 +58,7 @@
             android:layout_below="@id/round_badge_visitor"
             android:layout_alignStart="@id/round_badge_visitor"
             android:layout_marginTop="6dp"
-            android:maxLines="1"
-            tools:text="Neil Katuna" />
+            tools:text="Neil Katuna The N-Dogg" />
 
         <androidx.cardview.widget.CardView
             android:id="@+id/round_badge_home"
@@ -87,7 +86,7 @@
             android:layout_below="@id/round_badge_home"
             android:layout_alignEnd="@id/round_badge_home"
             android:layout_marginTop="6dp"
-            tools:text="Matt Miller" />
+            tools:text="Matt Miller The M-Cat" />
 
         <TextView
             android:id="@+id/score_home"
@@ -123,7 +122,7 @@
             android:id="@+id/versus_text"
             android:layout_width="40dp"
             android:layout_height="56dp"
-            tools:text="vs."
+            android:text="@string/vs"
             style="@style/HeaderTextSecondaryLight"
             android:layout_centerHorizontal="true"
             android:layout_alignTop="@id/round_badge_visitor"

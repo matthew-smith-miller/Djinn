@@ -40,7 +40,6 @@ class RivalryActivity : AppCompatActivity() {
             .observe(this) { rivalryWithGames ->
                 rivalryWithGames.let { rivalryWithGames ->
                     currentRivalry = rivalryWithGames.rivalry
-                    viewModel.setPlayersFromRivalry(rivalryWithGames.rivalry)
                     Log.d("players: ", currentRivalry!!.visitorPlayer.toString())
                     games = rivalryWithGames.games.sortedByDescending { it.id }
                     findViewById<TextView>(R.id.score_visitor).text =
@@ -99,8 +98,6 @@ class RivalryActivity : AppCompatActivity() {
                             putExtra(GAME, id)
                             putExtra(VISITOR_PLAYER_ID, currentRivalry?.visitorPlayer)
                             putExtra(HOME_PLAYER_ID, currentRivalry?.homePlayer)
-                            putExtra(VISITOR_PLAYER_ID, viewModel.visitorPlayer.value?.id)
-                            putExtra(HOME_PLAYER_ID, viewModel.homePlayer.value?.id)
                         }
                         startActivity(intent)
                     }
@@ -126,8 +123,6 @@ class RivalryActivity : AppCompatActivity() {
             putExtra(GAME, game.id)
             putExtra(HOME_PLAYER_ID, currentRivalry?.homePlayer)
             putExtra(VISITOR_PLAYER_ID, currentRivalry?.visitorPlayer)
-            putExtra(VISITOR_PLAYER_ID, viewModel.visitorPlayer.value?.id)
-            putExtra(HOME_PLAYER_ID, viewModel.homePlayer.value?.id)
         }
         startActivity(intent)
     }
