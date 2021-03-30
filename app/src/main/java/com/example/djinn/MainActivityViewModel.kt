@@ -10,7 +10,7 @@ class MainViewModel(
 ) : ViewModel() {
 
     val allPlayers: LiveData<List<Player>> = playerRepository.allPlayers.asLiveData()
-    val allRivalries: LiveData<List<Rivalry>> = rivalryRepository.allRivalries.asLiveData()
+    val activeRivalries: LiveData<List<Rivalry>> = rivalryRepository.activeRivalries.asLiveData()
 
     fun getPlayerByName(name: String): LiveData<Player> {
         return playerRepository.getPlayerByName(name).asLiveData()
@@ -20,15 +20,25 @@ class MainViewModel(
         return playerRepository.getPlayerIdsAndNames(ids).asLiveData()
     }
 
-    /**
-     * Launching a new coroutine to insert the data in a non-blocking way
-     */
+    fun insertPlayerAndRivalry(player: Player) = viewModelScope.launch {
+        val newPlayerId = insertPlayer(player)
+        rivalryRepository.insert(Rivalry.makeRivalry(newPlayerId, 33))
+    }
+
     fun insert(player: Player) = viewModelScope.launch {
         playerRepository.insert(player)
     }
+
+    private suspend fun insertPlayer(player: Player): Int {
+        return playerRepository.insert(player).toInt()
+    }
+
+    private suspend fun getHomePlayerId(): Int? {
+        return playerRepository.getPlayerByName("Matthew Miller").asLiveData().value?.id
+    }
 }
 
-class MainViewModelFactory(
+class MainActivityViewModelFactory(
     private val playerRepository: PlayerRepository,
     private val rivalryRepository: RivalryRepository
 ) : ViewModelProvider.Factory {

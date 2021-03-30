@@ -14,7 +14,8 @@ data class Rivalry(
     @ColumnInfo(name = "visitor_score") var visitorScore: Int = 0,
     @ColumnInfo(name = "home_score") var homeScore: Int = 0,
     @ColumnInfo(name = "created_date") val createdDate: Date = Calendar.getInstance().time,
-    @ColumnInfo(name = "last_modified_date") var lastModifiedDate: Date = createdDate
+    @ColumnInfo(name = "last_modified_date") var lastModifiedDate: Date = createdDate,
+    @ColumnInfo(name = "is_active") var isActive: Boolean = true
 ) {
     @Ignore
     val games = arrayListOf<Game>()

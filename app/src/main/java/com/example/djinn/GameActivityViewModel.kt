@@ -12,9 +12,6 @@ class GameActivityViewModel(
     private val partialGameRepository: PartialGameRepository
 ) : ViewModel() {
 
-    /**
-     * Launching a new coroutine to insert the data in a non-blocking way
-     */
     fun insertPartialGames(partialGames: List<PartialGame>) = viewModelScope.launch {
         insertPartialGamesAndRollupScore(partialGames)
     }

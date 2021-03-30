@@ -1,17 +1,19 @@
 package com.example.djinn
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
+import android.widget.Toolbar
 import androidx.activity.viewModels
+import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.util.*
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : FragmentActivity(), NewPlayerDialogFragment.NewPlayerDialogListener {
     private val viewModel: MainViewModel by viewModels {
-        MainViewModelFactory(
+        MainActivityViewModelFactory(
             (application as DjinnApplication).playerRepository,
             (application as DjinnApplication).rivalryRepository
         )
@@ -26,23 +28,36 @@ class MainActivity : AppCompatActivity() {
         )
     }
     private val playerImageMap: TreeMap<Int, Int> = TreeMap()
+    private val playerMap: TreeMap<Int, Player> = TreeMap()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        //Set Toolbar since FragmentActivity doesn't come with it by default
+        val toolbar = findViewById<Toolbar>(R.id.custom_toolbar)
+        setActionBar(toolbar)
+
+        //Set listener on FAB for new player dialog
+        findViewById<FloatingActionButton>(R.id.fab_add_player).setOnClickListener {
+            showNewPlayerDialog()
+        }
+
         viewModel.allPlayers.observe(this) { players ->
             for (player in players) {
-                playerImageMap[player.id] = player.image
+                playerImageMap[player.id] =
+                    resources.getIdentifier(player.imageName, "drawable", packageName)
+                playerMap[player.id] = player
             }
         }
 
         val recyclerView: RecyclerView = findViewById(R.id.listview_all)
-        val adapter = RivalryListAdapter(playerImageMap) { rivalry -> adapterOnClick(rivalry) }
+        val adapter =
+            RivalryListAdapter(playerImageMap, playerMap) { rivalry -> adapterOnClick(rivalry) }
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-        viewModel.allRivalries
+        viewModel.activeRivalries
             .observe(this) { rivalries ->
                 rivalries.let { adapter.submitList(it) }
             }
@@ -105,14 +120,25 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun showNewPlayerDialog() {
+        val dialog = NewPlayerDialogFragment()
+        dialog.show(supportFragmentManager, "NewPlayerDialogFragment")
+    }
+
+    override fun onDialogPositiveClick(dialog: DialogFragment, playerName: String) {
+        viewModel.insertPlayerAndRivalry(Player.makePlayer(playerName, ""))
+    }
+
+    override fun onDialogNegativeClick(dialog: DialogFragment) {
+        //Nothing
+    }
+
     /**
      * Function passed to list adapter to set onClick behavior
      */
     private fun adapterOnClick(rivalry: Rivalry) {
         val intent = Intent(this, RivalryActivity::class.java).apply {
             putExtra(RIVALRY, rivalry.id)
-            putExtra(VISITOR_IMAGE, playerImageMap[rivalry.visitorPlayer])
-            putExtra(HOME_IMAGE, playerImageMap[rivalry.homePlayer])
         }
         startActivity(intent)
     }

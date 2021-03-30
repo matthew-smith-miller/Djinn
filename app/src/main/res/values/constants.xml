@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="bonus_gin">25</integer>
+    <integer name="bonus_knock">0</integer>
+    <integer name="bonus_undercut">10</integer>
+</resources>

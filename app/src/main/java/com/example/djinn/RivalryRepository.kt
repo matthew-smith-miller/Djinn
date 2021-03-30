@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.collect
 class RivalryRepository(private val rivalryDao: RivalryDao) {
 
     val allRivalries: Flow<List<Rivalry>> = rivalryDao.getAllRivalries()
+    val activeRivalries: Flow<List<Rivalry>> = rivalryDao.getActiveRivalries()
     fun getRivalryWithGamesById(id: Int): Flow<DataClasses.RivalryWithGames> {
         return rivalryDao.getRivalryWithGamesById(id)
     }

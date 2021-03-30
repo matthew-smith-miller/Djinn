@@ -14,6 +14,12 @@
         android:layout_marginTop="@dimen/small_gap"
         android:layout_marginBottom="@dimen/small_gap" />
 
+    <Spinner
+        android:id="@+id/spinner_partial_game_types"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/small_gap" />
+
     <EditText
         android:id="@+id/edit_text_raw_score"
         style="@style/HeaderText"
@@ -24,10 +30,4 @@
         android:inputType="number"
         android:textAlignment="center"
         tools:text="40" />
-
-    <Spinner
-        android:id="@+id/spinner_partial_game_types"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/small_gap" />
 </LinearLayout>

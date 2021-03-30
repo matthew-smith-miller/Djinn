@@ -1,5 +1,7 @@
 package com.example.djinn
 
+import android.content.Context
+import android.opengl.Visibility
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,13 +13,17 @@ import java.util.*
 
 class RivalryListAdapter(
     private val playerImageMap: TreeMap<Int, Int>,
+    private val playerMap: TreeMap<Int, Player>,
     private val onClick: (Rivalry) -> Unit
 ) :
     androidx.recyclerview.widget.ListAdapter<Rivalry, RivalryListAdapter.RivalryViewHolder>(
         RivalriesComparator()
     ) {
 
+    private lateinit var parent: ViewGroup
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RivalryViewHolder {
+        this.parent = parent
         return RivalryViewHolder.create(parent, onClick)
     }
 
@@ -26,9 +32,15 @@ class RivalryListAdapter(
         holder.bind(
             current.id,
             current.visitorScore,
-            playerImageMap[current.visitorPlayer],
-            playerImageMap[current.homePlayer],
-            current.homeScore
+            playerMap[current.visitorPlayer]?.imageName.let {
+                parent.context.resources.getIdentifier(it, "drawable", parent.context.packageName)
+            },
+            playerMap[current.visitorPlayer]?.initials,
+            current.homeScore,
+            playerMap[current.homePlayer]?.imageName.let {
+                parent.context.resources.getIdentifier(it, "drawable", parent.context.packageName)
+            },
+            playerMap[current.homePlayer]?.initials
         )
         holder.view.setOnClickListener {
             onClick(current)
@@ -39,17 +51,39 @@ class RivalryListAdapter(
         RecyclerView.ViewHolder(itemView) {
         private val visitorScoreTextView = itemView.findViewById<TextView>(R.id.score_visitor)
         private val visitorImageView = itemView.findViewById<ImageView>(R.id.round_image_visitor)
+        private val visitorInitialsTextView = itemView.findViewById<TextView>(R.id.initials_visitor)
         private val homeImageView = itemView.findViewById<ImageView>(R.id.round_image_home)
         private val homeScoreTextView = itemView.findViewById<TextView>(R.id.score_home)
+        private val homeInitialsTextView = itemView.findViewById<TextView>(R.id.initials_home)
         val view = itemView
 
-        fun bind(id: Int, visitorScore: Int, visitorImage: Int?, homeImage: Int?, homeScore: Int) {
+        fun bind(
+            id: Int,
+            visitorScore: Int,
+            visitorImage: Int?,
+            visitorInitials: String?,
+            homeScore: Int,
+            homeImage: Int?,
+            homeInitials: String?
+        ) {
             visitorScoreTextView.text = visitorScore.toString()
-            if (visitorImage != null) {
+            if (visitorImage != null && visitorImage != 0) {
                 visitorImageView.setImageResource(visitorImage)
+                visitorImageView.visibility = View.VISIBLE
+                visitorInitialsTextView.visibility = View.GONE
+            } else {
+                visitorImageView.visibility = View.GONE
+                visitorInitialsTextView.visibility = View.VISIBLE
+                visitorInitialsTextView.text = visitorInitials
             }
-            if (homeImage != null) {
+            if (homeImage != null && homeImage != 0) {
                 homeImageView.setImageResource(homeImage)
+                homeImageView.visibility = View.VISIBLE
+                homeInitialsTextView.visibility = View.GONE
+            } else {
+                homeImageView.visibility = View.GONE
+                homeInitialsTextView.visibility = View.VISIBLE
+                homeInitialsTextView.text = homeInitials
             }
             homeScoreTextView.text = homeScore.toString()
             itemView.tag = id

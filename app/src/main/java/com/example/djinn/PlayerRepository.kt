@@ -21,7 +21,7 @@ class PlayerRepository(private val playerDao: PlayerDao) {
 
     @Suppress("RedundantSuspendModifier")
     @WorkerThread
-    suspend fun insert(player: Player) {
-        playerDao.insertAll(player)
+    suspend fun insert(player: Player): Long {
+        return playerDao.insert(player)
     }
 }

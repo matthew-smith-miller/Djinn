@@ -12,13 +12,14 @@ data class Player(
     var name: String,
     var initials: String,
     var image: Int,
+    @ColumnInfo(name = "image_name") var imageName: String?,
     @ColumnInfo(name = "is_home_player") val isHomePlayer: Boolean,
     @ColumnInfo(name = "created_date") val createdDate: Date = Calendar.getInstance().time,
     @ColumnInfo(name = "last_modified_date") var lastModifiedDate: Date = createdDate
 ) {
 
     companion object PlayerManager {
-        fun makePlayer(name: String, image: Int, isHomePlayer: Boolean): Player {
+        fun makePlayer(name: String, imageName: String?): Player {
             val names = name.split(" ")
             return Player(
                 0,
@@ -30,8 +31,9 @@ data class Player(
                     0 -> "N/A"
                     else -> names[0].substring(0, 1).plus(names.last().substring(0, 1))
                 },
-                image,
-                isHomePlayer
+                0,
+                imageName,
+                false
             )
         }
     }

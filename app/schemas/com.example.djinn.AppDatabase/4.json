@@ -1,8 +1,8 @@
 {
   "formatVersion": 1,
   "database": {
-    "version": 3,
-    "identityHash": "a3645c2fca3a4a6a0f7197a99cde4da7",
+    "version": 4,
+    "identityHash": "0538f315807f4775be7f83ff66826414",
     "entities": [
       {
         "tableName": "Player",
@@ -68,7 +68,7 @@
       },
       {
         "tableName": "Rivalry",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `visitor_player` INTEGER NOT NULL, `home_player` INTEGER NOT NULL, `visitor_score` INTEGER NOT NULL, `home_score` INTEGER NOT NULL, `created_date` INTEGER NOT NULL, `last_modified_date` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `visitor_player` INTEGER NOT NULL, `home_player` INTEGER NOT NULL, `visitor_score` INTEGER NOT NULL, `home_score` INTEGER NOT NULL, `created_date` INTEGER NOT NULL, `last_modified_date` INTEGER NOT NULL, `is_active` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -109,6 +109,12 @@
           {
             "fieldPath": "lastModifiedDate",
             "columnName": "last_modified_date",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isActive",
+            "columnName": "is_active",
             "affinity": "INTEGER",
             "notNull": true
           }
@@ -238,7 +244,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'a3645c2fca3a4a6a0f7197a99cde4da7')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '0538f315807f4775be7f83ff66826414')"
     ]
   }
 }

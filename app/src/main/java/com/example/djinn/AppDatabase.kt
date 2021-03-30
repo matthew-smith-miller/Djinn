@@ -5,13 +5,14 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @Database(
     entities = [Player::class, Rivalry::class, Game::class, PartialGame::class],
-    version = 2
+    version = 4
 )
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
@@ -62,7 +63,7 @@ abstract class AppDatabase : RoomDatabase() {
             gameDao: GameDao,
             partialGameDao: PartialGameDao
         ) {
-            playerDao.deleteAll()
+            /*playerDao.deleteAll()
             rivalryDao.deleteAll()
             gameDao.deleteAll()
             partialGameDao.deleteAll()
@@ -87,13 +88,24 @@ abstract class AppDatabase : RoomDatabase() {
 
             for (gameNumber in 1..8) {
                 gameDao.insertAll(Game.makeGame(gameNumber, scottRivalry.id))
-            }
+            }*/
         }
     }
 
     companion object {
         @Volatile
         private var INSTANCE: AppDatabase? = null
+
+        val MIGRATION_2_3 = object : Migration(2, 3) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("ALTER TABLE Player ADD COLUMN image_name TEXT")
+            }
+        }
+        val MIGRATION_3_4 = object : Migration(3, 4) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("ALTER TABLE Rivalry ADD COLUMN is_active INTEGER NOT NULL DEFAULT 1")
+            }
+        }
 
         fun getDatabase(
             context: Context,
@@ -105,6 +117,7 @@ abstract class AppDatabase : RoomDatabase() {
                     AppDatabase::class.java,
                     "app_database"
                 )
+                    .addMigrations(MIGRATION_2_3, MIGRATION_3_4)
                     .addCallback(AppDatabaseCallBack(scope))
                     .build()
                 INSTANCE = instance

@@ -21,28 +21,6 @@
         style="@style/HeaderText"
         android:gravity="center" />
 
-    <!--
-    <View
-        android:id="@+id/image_visitor"
-        android:layout_width="@dimen/square_badge_height_width"
-        android:layout_height="@dimen/square_badge_height_width"
-        android:background="@drawable/round_view_initials"
-        android:layout_marginStart="12dp"
-        android:layout_toEndOf="@id/score_visitor"
-        android:elevation="@dimen/high_elevation" />
-
-    <TextView
-        android:id="@+id/initials_visitor"
-        android:layout_width="@dimen/square_badge_height_width"
-        android:layout_height="@dimen/square_badge_height_width"
-        tools:text="S"
-        style="@style/HeaderText"
-        android:layout_alignStart="@id/image_visitor"
-        android:layout_alignTop="@id/image_visitor"
-        android:textAlignment="center"
-        android:gravity="center"
-        android:elevation="@dimen/high_elevation" /> -->
-
     <androidx.cardview.widget.CardView
         android:id="@+id/round_badge_visitor"
         android:layout_width="@dimen/square_badge_height_width"
@@ -51,6 +29,7 @@
         android:layout_toEndOf="@id/score_visitor"
         android:elevation="@dimen/high_elevation"
         app:cardCornerRadius="@dimen/square_badge_corner_radius"
+        android:backgroundTint="@color/colorAccent"
         app:cardPreventCornerOverlap="true">
 
         <ImageView
@@ -61,6 +40,20 @@
             tools:src="@drawable/neil" />
     </androidx.cardview.widget.CardView>
 
+    <!-- Only if no image -->
+    <TextView
+        android:id="@+id/initials_visitor"
+        style="@style/HeaderText"
+        android:layout_width="@dimen/square_badge_height_width"
+        android:layout_height="@dimen/square_badge_height_width"
+        android:layout_alignStart="@id/round_badge_visitor"
+        android:layout_alignTop="@id/round_badge_visitor"
+        android:elevation="@dimen/high_elevation"
+        android:gravity="center"
+        android:textAlignment="center"
+        android:visibility="gone"
+        tools:text="BO" />
+
     <androidx.cardview.widget.CardView
         android:id="@+id/round_badge_home"
         android:layout_width="@dimen/square_badge_height_width"
@@ -69,6 +62,7 @@
         android:layout_toStartOf="@id/score_home"
         android:elevation="@dimen/high_elevation"
         app:cardCornerRadius="@dimen/square_badge_corner_radius"
+        android:backgroundTint="@color/colorAccent"
         app:cardPreventCornerOverlap="true">
 
         <ImageView
@@ -79,27 +73,19 @@
             tools:src="@drawable/matt" />
     </androidx.cardview.widget.CardView>
 
-    <!--
-    <View
-        android:id="@+id/image_home"
-        android:layout_width="@dimen/square_badge_height_width"
-        android:layout_height="@dimen/square_badge_height_width"
-        android:background="@drawable/round_view_initials"
-        android:layout_marginEnd="12dp"
-        android:layout_toStartOf="@id/score_home"
-        android:elevation="@dimen/high_elevation" />
-
+    <!-- Only if no image -->
     <TextView
         android:id="@+id/initials_home"
         android:layout_width="@dimen/square_badge_height_width"
         android:layout_height="@dimen/square_badge_height_width"
         tools:text="MM"
         style="@style/HeaderText"
-        android:layout_alignStart="@id/image_home"
-        android:layout_alignTop="@id/image_home"
+        android:layout_alignStart="@id/round_badge_home"
+        android:layout_alignTop="@id/round_badge_home"
         android:textAlignment="center"
         android:gravity="center"
-        android:elevation="@dimen/high_elevation" /> -->
+        android:elevation="@dimen/high_elevation"
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/score_home"

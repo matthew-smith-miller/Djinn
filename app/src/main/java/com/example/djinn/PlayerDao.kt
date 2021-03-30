@@ -26,6 +26,9 @@ interface PlayerDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertAll(vararg players: Player)
 
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insert(player: Player): Long
+
     @Update
     suspend fun update(player: Player)
 

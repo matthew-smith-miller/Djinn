@@ -8,6 +8,9 @@ interface RivalryDao {
     @Query("SELECT * FROM Rivalry")
     fun getAllRivalries(): Flow<List<Rivalry>>
 
+    @Query("SELECT * FROM Rivalry WHERE is_active = 1")
+    fun getActiveRivalries(): Flow<List<Rivalry>>
+
     @Query("SELECT * FROM Rivalry WHERE visitor_player = :visitorPlayer AND home_player = :homePlayer")
     fun getRivalryFromPlayerIds(visitorPlayer: Int, homePlayer: Int): Rivalry
 

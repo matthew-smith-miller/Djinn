@@ -18,7 +18,7 @@ class RivalryActivityViewModel(
     val homePlayer: LiveData<Player?>
         get() = _homePlayer
 
-    suspend fun getPlayerById(id: Int): LiveData<Player> {
+    fun getPlayerById(id: Int): LiveData<Player> {
         return playerRepository.getPlayerById(id).asLiveData()
     }
 
@@ -26,7 +26,13 @@ class RivalryActivityViewModel(
         return rivalryRepository.getRivalryWithGamesById(id).asLiveData()
     }
 
-    fun setPlayers(visitorPlayerId: Int, homePlayerId: Int) {
+    fun setPlayersFromRivalry(rivalry: Rivalry) {
+        viewModelScope.launch {
+            setPlayers(rivalry.visitorPlayer, rivalry.visitorPlayer)
+        }
+    }
+
+    private suspend fun setPlayers(visitorPlayerId: Int, homePlayerId: Int) {
         viewModelScope.launch {
             _visitorPlayer.value = getPlayerById(visitorPlayerId).value
             _homePlayer.value = getPlayerById(homePlayerId).value

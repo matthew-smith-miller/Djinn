@@ -8,7 +8,6 @@ import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.Spinner
 import android.widget.Toast
-import androidx.activity.viewModels
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import java.lang.ClassCastException
@@ -81,8 +80,8 @@ class PartialGameDialogFragment : DialogFragment() {
                 }
             }
             builder.setView(dialogView).apply {
-                setTitle(R.string.dialog_title)
-                setMessage(R.string.dialog_description)
+                setTitle(R.string.partial_game_dialog_title)
+                setMessage(R.string.partial_game_dialog_description)
                 setPositiveButton(
                     R.string.dialog_add
                 ) { dialog, id ->

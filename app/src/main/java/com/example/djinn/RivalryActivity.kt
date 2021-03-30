@@ -13,8 +13,6 @@ import kotlin.properties.Delegates
 
 class RivalryActivity : AppCompatActivity() {
     private var currentRivalry: Rivalry? = null
-    private var visitorImageId by Delegates.notNull<Int>()
-    private var homeImageId by Delegates.notNull<Int>()
     private var games: List<Game> = ArrayList()
     private val viewModel: RivalryActivityViewModel by viewModels {
         RivalryActivityViewModelFactory(
@@ -27,9 +25,6 @@ class RivalryActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_rivalry)
-
-        visitorImageId = intent.getIntExtra(VISITOR_IMAGE, -1)
-        homeImageId = intent.getIntExtra(HOME_IMAGE, -1)
 
         val recyclerView: RecyclerView = findViewById(R.id.listview_games)
         val visitorImage = findViewById<ImageView>(R.id.round_image_visitor)
@@ -45,6 +40,7 @@ class RivalryActivity : AppCompatActivity() {
             .observe(this) { rivalryWithGames ->
                 rivalryWithGames.let { rivalryWithGames ->
                     currentRivalry = rivalryWithGames.rivalry
+                    viewModel.setPlayersFromRivalry(rivalryWithGames.rivalry)
                     Log.d("players: ", currentRivalry!!.visitorPlayer.toString())
                     games = rivalryWithGames.games.sortedByDescending { it.id }
                     findViewById<TextView>(R.id.score_visitor).text =
@@ -52,27 +48,30 @@ class RivalryActivity : AppCompatActivity() {
                     findViewById<TextView>(R.id.score_home).text =
                         rivalryWithGames.rivalry.homeScore.toString()
                     adapter.submitList(games)
-                    visitorImage.setImageResource(visitorImageId)
-                    homeImage.setImageResource(homeImageId)
+                    viewModel.getPlayerById(rivalryWithGames.rivalry.visitorPlayer)
+                        .observe(this) { player ->
+                            visitorImage.setImageResource(
+                                resources.getIdentifier(
+                                    player.imageName,
+                                    "drawable",
+                                    packageName
+                                )
+                            )
+                            visitorName.text = player.name
+                        }
+                    viewModel.getPlayerById(rivalryWithGames.rivalry.homePlayer)
+                        .observe(this) { player ->
+                            homeImage.setImageResource(
+                                resources.getIdentifier(
+                                    player.imageName,
+                                    "drawable",
+                                    packageName
+                                )
+                            )
+                            homeName.text = player.name
+                        }
                 }
             }
-        if (currentRivalry != null) {
-            viewModel.setPlayers(currentRivalry!!.visitorPlayer, currentRivalry!!.homePlayer)
-        }
-        viewModel.visitorPlayer.observe(this) { player ->
-            if (player != null) {
-                visitorImage.setImageResource(player.image)
-                visitorImageId = player.image
-                visitorName.text = player.name
-            }
-        }
-        viewModel.homePlayer.observe(this) { player ->
-            if (player != null) {
-                homeImage.setImageResource(player.image)
-                homeImageId = player.image
-                homeName.text = player.name
-            }
-        }
 
         (findViewById<View>(R.id.button_add_game) as ImageButton).setOnClickListener {
             if (currentRivalry != null) {
@@ -100,20 +99,13 @@ class RivalryActivity : AppCompatActivity() {
                             putExtra(GAME, id)
                             putExtra(VISITOR_PLAYER_ID, currentRivalry?.visitorPlayer)
                             putExtra(HOME_PLAYER_ID, currentRivalry?.homePlayer)
-                            putExtra(VISITOR_IMAGE, visitorImageId)
-                            putExtra(HOME_IMAGE, homeImageId)
+                            putExtra(VISITOR_PLAYER_ID, viewModel.visitorPlayer.value?.id)
+                            putExtra(HOME_PLAYER_ID, viewModel.homePlayer.value?.id)
                         }
                         startActivity(intent)
                     }
                 } else {
-                    val intent = Intent(this, GameActivity::class.java).apply {
-                        putExtra(GAME, games[0].id)
-                        putExtra(VISITOR_PLAYER_ID, currentRivalry?.visitorPlayer)
-                        putExtra(HOME_PLAYER_ID, currentRivalry?.homePlayer)
-                        putExtra(VISITOR_IMAGE, visitorImageId)
-                        putExtra(HOME_IMAGE, homeImageId)
-                    }
-                    startActivity(intent)
+                    adapterOnClick(games[0])
                 }
 
             }
@@ -134,8 +126,8 @@ class RivalryActivity : AppCompatActivity() {
             putExtra(GAME, game.id)
             putExtra(HOME_PLAYER_ID, currentRivalry?.homePlayer)
             putExtra(VISITOR_PLAYER_ID, currentRivalry?.visitorPlayer)
-            putExtra(VISITOR_IMAGE, visitorImageId)
-            putExtra(HOME_IMAGE, homeImageId)
+            putExtra(VISITOR_PLAYER_ID, viewModel.visitorPlayer.value?.id)
+            putExtra(HOME_PLAYER_ID, viewModel.homePlayer.value?.id)
         }
         startActivity(intent)
     }
