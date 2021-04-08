@@ -1,10 +1,9 @@
 package com.example.djinn
 
-import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ListAdapter
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
@@ -12,7 +11,10 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import java.util.*
 
-class PartialGameListAdapter(val homePlayerId: Int) :
+class PartialGameListAdapter(
+    private val homePlayerId: Int,
+    private val badgeOnClick: (PartialGame) -> Unit
+) :
     androidx.recyclerview.widget.ListAdapter<PartialGame, PartialGameListAdapter.PartialGameViewHolder>(
         PartialGamesComparator()
     ) {
@@ -24,15 +26,12 @@ class PartialGameListAdapter(val homePlayerId: Int) :
     override fun onBindViewHolder(holder: PartialGameViewHolder, position: Int) {
         val current = getItem(position)
         holder.bind(
-            current.type,
-            current.totalScore.toString(),
-            current.note,
-            current.id,
+            current,
             when (current.player) {
                 homePlayerId -> "Home"
                 else -> "Visitor"
             }
-        )
+        ) { badgeOnClick }
     }
 
     class PartialGameViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -40,8 +39,8 @@ class PartialGameListAdapter(val homePlayerId: Int) :
         private val scoreTextView = itemView.findViewById<TextView>(R.id.score)
         private val noteTextView = itemView.findViewById<TextView>(R.id.note)
 
-        fun bind(type: String, score: String, note: String?, id: Int, playerRole: String) {
-            badgeView.background = when (type) {
+        fun bind(current: PartialGame, playerRole: String, badgeOnClick: (PartialGame) -> Unit) {
+            badgeView.background = when (current.type) {
                 "Gin" -> ContextCompat.getDrawable(
                     itemView.context, R.drawable.round_view_gin
                 )
@@ -55,9 +54,14 @@ class PartialGameListAdapter(val homePlayerId: Int) :
                     itemView.context, R.drawable.round_view_knock
                 )
             }
-            scoreTextView.text = score
-            noteTextView.text = note
-            itemView.tag = id
+            badgeView.setOnLongClickListener {
+                badgeOnClick(current)
+                Log.d("PartialGameListAdapter", current.toString())
+                return@setOnLongClickListener true
+            }
+            scoreTextView.text = current.totalScore.toString()
+            noteTextView.text = current.note
+            itemView.tag = current.id
             val sideDimen = itemView.context.resources.getDimension(R.dimen.side_margin).toInt()
             when (playerRole) {
                 "Visitor" -> (badgeView.layoutParams as RelativeLayout.LayoutParams).let {

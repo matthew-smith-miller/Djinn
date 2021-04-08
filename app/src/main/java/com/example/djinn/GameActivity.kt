@@ -1,5 +1,6 @@
 package com.example.djinn
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.*
@@ -44,7 +45,8 @@ class GameActivity : FragmentActivity(),
         val homeName = findViewById<TextView>(R.id.name_home)
 
         val recyclerView = findViewById<RecyclerView>(R.id.listview_games)
-        val adapter = PartialGameListAdapter(homePlayerId)
+        val adapter =
+            PartialGameListAdapter(homePlayerId) { partialGame -> badgeOnClick(partialGame) }
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(this)
 
@@ -120,5 +122,12 @@ class GameActivity : FragmentActivity(),
 
     override fun onDialogNegativeClick(dialog: DialogFragment) {
         //Nothing
+    }
+
+    /**
+     * Function passed to list adapter to set onClick behavior
+     */
+    private fun badgeOnClick(partialGame: PartialGame) {
+        Toast.makeText(this, "${partialGame.totalScore}", Toast.LENGTH_SHORT).show()
     }
 }

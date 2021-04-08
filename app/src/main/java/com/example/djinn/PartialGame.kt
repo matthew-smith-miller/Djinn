@@ -13,9 +13,9 @@ data class PartialGame(
     val note: String?,
     @ColumnInfo(name = "raw_score") val rawScore: Int,
     @ColumnInfo(name = "total_score") val totalScore: Int = rawScore + when (type) {
-        "Gin" -> 20
-        "Undercut" -> 10
-        else -> 0
+        "Gin" -> R.integer.bonus_gin
+        "Undercut" -> R.integer.bonus_undercut
+        else -> R.integer.bonus_knock
     }
 ) {
 
