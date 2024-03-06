@@ -42,7 +42,7 @@ class MainActivityViewModelFactory(
     private val playerRepository: PlayerRepository,
     private val rivalryRepository: RivalryRepository
 ) : ViewModelProvider.Factory {
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(MainViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
             return MainViewModel(playerRepository, rivalryRepository) as T

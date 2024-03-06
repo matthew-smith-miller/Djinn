@@ -18,7 +18,7 @@ class PartialGameViewModelFactory(
     private val partialGameRepository: PartialGameRepository
 ) :
     ViewModelProvider.Factory {
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(PartialGameViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
             return PartialGameViewModel(partialGameRepository) as T

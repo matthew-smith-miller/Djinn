@@ -27,7 +27,7 @@ class RivalryViewModel(private val repository: RivalryRepository) : ViewModel() 
 
 class RivalryViewModelFactory(private val repository: RivalryRepository) :
     ViewModelProvider.Factory {
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(RivalryViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
             return RivalryViewModel(repository) as T

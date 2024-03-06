@@ -54,7 +54,7 @@ class GameActivityViewModelFactory(
     private val gameRepository: GameRepository,
     private val partialGameRepository: PartialGameRepository
 ) : ViewModelProvider.Factory {
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(GameActivityViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
             return GameActivityViewModel(
